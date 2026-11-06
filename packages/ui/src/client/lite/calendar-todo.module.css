@@ -1,0 +1,43 @@
+.monthCard { margin: 14px 16px 0; padding: 2px 0 10px; background: var(--card); border: 1px solid var(--rule); border-radius: 16px; box-shadow: var(--shadow); }
+.monthCard [role="grid"] { touch-action: pan-y pinch-zoom; border-bottom: 0; }
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 12px; padding: 0 10px 2px; color: var(--muted); font-size: calc(var(--u) * 11); }
+.legend span { white-space: nowrap; }
+.legend i, .dot { display: inline-block; width: 6px; height: 6px; margin-right: 4px; border-radius: 50%; vertical-align: middle; background: var(--blue); }
+.legend [data-tone="due"], .dot[data-tone="due"] { background: var(--orange); }
+.legend [data-tone="done"], .dot[data-tone="done"] { background: var(--faint); }
+.legend [data-tone="reminder"], .dot[data-tone="reminder"] { background: var(--pink); }
+.dot { margin: 0; width: 5px; height: 5px; }
+.tasks { padding: 22px 16px 28px; }
+.head { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; color: var(--muted); font-size: calc(var(--u) * 13); }
+.head h2 { flex: 1; margin: 0; font: inherit; font-weight: 600; }
+.head button, .create button, .retry { color: var(--blue); font: inherit; }
+.list { margin: 0; padding: 0; list-style: none; overflow: hidden; border: 1px solid var(--rule); border-radius: 14px; background: var(--card); box-shadow: var(--shadow); }
+.item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid var(--rule); }
+.item:last-child { border: 0; }
+.check { margin: 2px 0 0; width: 19px; height: 19px; accent-color: var(--faint); flex: none; }
+.body { min-width: 0; display: flex; flex-direction: column; line-height: 1.5; overflow-wrap: anywhere; }
+.body[data-done] { color: var(--faint); text-decoration: line-through; }
+.due { color: var(--muted); font-size: calc(var(--u) * 12); }
+.note, .error { margin: 8px 0; font-size: calc(var(--u) * 13); color: var(--muted); }
+.error { color: var(--danger); }
+.create { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
+.create input { flex: 1; min-width: 0; padding: 9px 10px; border: 1px solid var(--stroke); border-radius: 10px; background: var(--card); color: var(--fg); }
+
+.due[data-near] { color: var(--orange-text); }
+.body[data-done] .due { color: var(--faint); }
+.reminders { margin: 16px 16px 0; padding: 12px 14px; background: var(--pink-soft); border-radius: 14px; }
+.reminders h2 { margin: 0 0 6px; font-size: calc(var(--u) * 13); color: var(--pink-text); }
+.reminders p { margin: 4px 0; font-size: calc(var(--u) * 13); overflow-wrap: anywhere; }
+
+.monthCard { overflow: hidden; }
+.checkHit { position: relative; display: inline-flex; flex: none; }
+.checkHit .check { appearance: none; border: 1.5px solid var(--muted); border-radius: 5px; background: transparent; }
+.checkHit .check:checked { background: var(--blue-btn); border-color: var(--blue-btn); }
+.tick { position: absolute; inset: 2px 0 0; width: 19px; height: 19px; pointer-events: none; fill: none; stroke: var(--on-blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tick path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.check:checked + .tick path { stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .tick path { transition: stroke-dashoffset 240ms ease-out; }
+  .checkHit .check { transition: background-color 180ms ease, border-color 180ms ease; }
+  .monthCard [role="gridcell"] > span:first-child { transition: color 320ms ease, background-color 320ms ease, box-shadow 320ms ease; }
+}

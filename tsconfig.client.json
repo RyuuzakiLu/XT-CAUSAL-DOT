@@ -1,0 +1,95 @@
+{
+  "//": "Client 面聚合：与 tsconfig.host.json 成对存在（生成器工作区根判定 + Client 面分析种子）。由 scripts/gen-typert.mjs 自动生成，不要手改。",
+  "extends": "./tsconfig.base.client.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/bundle"
+    },
+    {
+      "path": "./packages/contracts"
+    },
+    {
+      "path": "./packages/memory"
+    },
+    {
+      "path": "./packages/postbox"
+    },
+    {
+      "path": "./packages/runtime"
+    },
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./packages/work"
+    },
+    {
+      "path": "./packages/.typert-vendor/deepseek-ai__dsh-typert-protocol"
+    }
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@xtcausal/dot-bundle": [
+        "/tmp/dot-release/packages/bundle/src/index.ts"
+      ],
+      "@xtcausal/dot-bundle/package.json": [
+        "/tmp/dot-release/packages/bundle/package.json"
+      ],
+      "@xtcausal/dot-contracts": [
+        "/tmp/dot-release/packages/contracts/src/index.ts"
+      ],
+      "@xtcausal/dot-contracts/package.json": [
+        "/tmp/dot-release/packages/contracts/package.json"
+      ],
+      "@xtcausal/dot-memory": [
+        "/tmp/dot-release/packages/memory/src/index.ts"
+      ],
+      "@xtcausal/dot-memory/package.json": [
+        "/tmp/dot-release/packages/memory/package.json"
+      ],
+      "@xtcausal/dot-memory/types": [
+        "/tmp/dot-release/packages/memory/src/types.ts"
+      ],
+      "@xtcausal/dot-postbox": [
+        "/tmp/dot-release/packages/postbox/src/index.ts"
+      ],
+      "@xtcausal/dot-postbox/package.json": [
+        "/tmp/dot-release/packages/postbox/package.json"
+      ],
+      "@xtcausal/dot-postbox/types": [
+        "/tmp/dot-release/packages/postbox/src/types.ts"
+      ],
+      "@xtcausal/dot-runtime": [
+        "/tmp/dot-release/packages/runtime/src/index.ts"
+      ],
+      "@xtcausal/dot-runtime/package.json": [
+        "/tmp/dot-release/packages/runtime/package.json"
+      ],
+      "@xtcausal/dot-runtime/types": [
+        "/tmp/dot-release/packages/runtime/src/types.ts"
+      ],
+      "@xtcausal/dot-ui-shell": [
+        "/tmp/dot-release/packages/ui/src/index.ts"
+      ],
+      "@xtcausal/dot-ui-shell/client": [
+        "/tmp/dot-release/packages/ui/src/client/index.ts"
+      ],
+      "@xtcausal/dot-ui-shell/package.json": [
+        "/tmp/dot-release/packages/ui/package.json"
+      ],
+      "@xtcausal/dot-work": [
+        "/tmp/dot-release/packages/work/src/index.ts"
+      ],
+      "@xtcausal/dot-work/client": [
+        "/tmp/dot-release/packages/work/src/types.ts"
+      ],
+      "@xtcausal/dot-work/package.json": [
+        "/tmp/dot-release/packages/work/package.json"
+      ],
+      "@deepseek-ai/dsh-typert-protocol": [
+        "/tmp/dot-release/packages/.typert-vendor/deepseek-ai__dsh-typert-protocol/src/index.d.ts"
+      ]
+    }
+  }
+}

@@ -1,0 +1,178 @@
+/* ================================================================
+   DOT 精灵气泡样式
+   ▍这是什么
+   从精灵旁边弹出的通知气泡：深蓝玻璃底 + 玫瑰金细边，和工作卡、对话气泡同一套。
+   层级 58：高于精灵（40）和顶部提示条（55），低于菜单、原生面板和临时卡。
+   位置由 SpriteBubbles 每帧直接写 left / top，这里不写死。
+   *更新：2026-10-24 · 建立*
+================================================================ */
+
+.bubbleStack {
+  --nb-gold: #e2b48f;
+  --nb-ink: #f6ece0;
+  --nb-muted: rgba(240, 226, 210, .72);
+  position: fixed;
+  z-index: 58;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(264px, calc(100vw - 16px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  pointer-events: none;
+  font-family: var(--dot-font-body);
+}
+.bubbleStack::-webkit-scrollbar { display: none; }
+
+.bubble {
+  position: relative;
+  display: grid;
+  gap: 5px;
+  padding: 11px 13px 12px;
+  border-radius: 14px;
+  color: var(--nb-ink);
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(226, 180, 143, .12), transparent 60%),
+    linear-gradient(180deg, rgba(22, 32, 66, .96), rgba(10, 15, 36, .97));
+  border: 1px solid rgba(226, 180, 143, .55);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .4), 0 12px 28px rgba(0, 0, 0, .5), inset 0 0 16px rgba(226, 180, 143, .08);
+  pointer-events: auto;
+  animation: nbEnter .26s cubic-bezier(.2, .8, .3, 1.2) both;
+}
+.bubble[data-kind="confirm"] { border-color: rgba(255, 210, 138, .85); box-shadow: 0 0 0 1px rgba(0, 0, 0, .4), 0 12px 28px rgba(0, 0, 0, .5), 0 0 16px rgba(255, 205, 120, .28); }
+.bubble[data-tone="done"] { border-color: rgba(111, 211, 154, .6); }
+.bubble[data-tone="failed"] { border-color: rgba(255, 140, 132, .65); }
+.bubble[data-tone="reminder"] { border-color: rgba(190, 170, 255, .6); }
+
+/* 小尖角：只画在最靠近精灵的第一条气泡上，指向精灵中心。 */
+.bubble:first-child::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(18, 27, 56, 1);
+  border: 1px solid transparent;
+  border-color: inherit;
+  transform: rotate(45deg);
+}
+.bubbleStack[data-side="left"] .bubble:first-child::after { right: -6px; top: clamp(8px, calc(var(--bubble-tail, 24px) - 5px), calc(100% - 18px)); border-left-color: transparent; border-bottom-color: transparent; }
+.bubbleStack[data-side="right"] .bubble:first-child::after { left: -6px; top: clamp(8px, calc(var(--bubble-tail, 24px) - 5px), calc(100% - 18px)); border-right-color: transparent; border-top-color: transparent; }
+.bubbleStack[data-side="above"] .bubble:first-child::after { display: none; }
+.bubbleStack[data-side="above"] .bubble:last-of-type::after { content: ''; position: absolute; width: 10px; height: 10px; background: rgba(12, 18, 42, 1); border: 1px solid; border-color: inherit; border-left-color: transparent; border-top-color: transparent; transform: rotate(45deg); bottom: -6px; left: clamp(8px, calc(var(--bubble-tail, 24px) - 5px), calc(100% - 18px)); }
+.bubbleStack[data-side="below"] .bubble:first-child::after { top: -6px; left: clamp(8px, calc(var(--bubble-tail, 24px) - 5px), calc(100% - 18px)); border-right-color: transparent; border-bottom-color: transparent; }
+
+.bubbleEyebrow { font-size: max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1))); letter-spacing: .1em; color: var(--nb-gold); padding-right: 22px; }
+.bubble[data-kind="confirm"] .bubbleEyebrow, .bubble[data-kind="input"] .bubbleEyebrow { color: #ffd28a; }
+.bubble[data-tone="done"] .bubbleEyebrow { color: #6fd39a; }
+.bubble[data-tone="failed"] .bubbleEyebrow { color: #ff8c84; }
+.bubble[data-tone="reminder"] .bubbleEyebrow { color: #c9b8ff; }
+.bubbleTitle { font-family: var(--dot-font-heading); font-size: max(var(--dot-fs-min, 0px), calc(13.5px * var(--dot-type-k, 1))); font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; padding-right: 18px; }
+.bubbleText { font-size: max(var(--dot-fs-min, 0px), calc(11.5px * var(--dot-type-k, 1))); line-height: 1.5; color: var(--nb-muted); overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.bubbleRisk { display: block; margin-top: 2px; padding: 6px 8px; border-radius: 8px; font-size: max(var(--dot-fs-min, 0px), calc(11px * var(--dot-type-k, 1))); line-height: 1.45; color: #ffd9c2; background: rgba(255, 140, 100, .12); border: 1px solid rgba(255, 150, 110, .4); overflow-wrap: anywhere; }
+.bubbleRisk b { margin-right: 6px; font-weight: 700; color: #ffb48a; }
+
+.bubbleActions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.bubbleStack .bubbleButton {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  min-width: 64px;
+  min-height: 40px; /* 2026-10-24 用户定 1B：按钮加高到 40px，手指好按 */
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: max(var(--dot-fs-min, 0px), calc(12.5px * var(--dot-type-k, 1)));
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--nb-ink);
+  border: 1px solid rgba(226, 180, 143, .45);
+  background: rgba(255, 255, 255, .05);
+}
+.bubbleStack .bubbleButton[data-variant="primary"] { color: #1d1408; border-color: rgba(255, 220, 170, .9); background: linear-gradient(180deg, #f3cfa6, #d9a47a); }
+.bubbleStack .bubbleButton:focus-visible { outline: 2px solid var(--nb-gold); outline-offset: 2px; }
+.bubbleStack .bubbleButton:active { transform: translateY(1px); }
+
+.bubbleStack .bubbleBody { all: unset; box-sizing: border-box; display: grid; gap: 5px; cursor: pointer; border-radius: 10px; min-height: 36px; }
+.bubbleStack .bubbleBody:focus-visible { outline: 2px solid var(--nb-gold); outline-offset: 3px; }
+.bubbleStack .bubbleClose {
+  all: unset;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: max(var(--dot-fs-min, 0px), calc(16px * var(--dot-type-k, 1)));
+  line-height: 1;
+  color: var(--nb-muted);
+  cursor: pointer;
+}
+.bubbleStack .bubbleClose:focus-visible { outline: 2px solid var(--nb-gold); outline-offset: -4px; }
+
+.bubbleQueued { align-self: flex-end; padding: 4px 10px; border-radius: 999px; font-size: max(var(--dot-fs-min, 0px), calc(10.5px * var(--dot-type-k, 1))); color: var(--nb-muted); background: rgba(10, 15, 36, .88); border: 1px solid rgba(226, 180, 143, .3); pointer-events: auto; }
+
+.spriteStateArt { background-repeat: no-repeat; aspect-ratio: 1; }
+
+/* 精灵右上角小气泡（用户定第 10 项 C 时追加）：工作中写在跑的工作数，待机写星邮匣未读数。
+   pointer-events: none，不挡精灵的拖动和点按；数字也写进了精灵按钮的读屏文字，所以这里 aria-hidden。 */
+:global([data-sprite-dock]) button:has(> .spriteBadge) { position: relative; }
+.spriteBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 1;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font: 700 11px/1 var(--dot-font-number, inherit);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  color: #241707;
+  background: linear-gradient(180deg, #f6dfaa, #d9b26a);
+  border: 1px solid rgba(255, 245, 220, .75);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .45);
+}
+.spriteBadge[data-sprite-badge="unread"] { color: #fff7f2; background: linear-gradient(180deg, #e0745f, #b9443a); border-color: rgba(255, 225, 215, .7); }
+
+@keyframes nbEnter { from { opacity: 0; transform: translateY(6px) scale(.96); } to { opacity: 1; transform: none; } }
+.bubbleStack[data-reduced-motion="true"] .bubble { animation: none; }
+@media (prefers-reduced-motion: reduce) { .bubble { animation: none; } }
+
+/* ==== 全局字号（docs/全局字号-改动说明-20261024.md） ====
+   正文统一成 400 宽下星邮匣分类栏四个字刚好一行放下的大小；--dot-type-k 是这一块的整体倍率（让这块的正文落到全局正文），
+   --dot-fs-min 是全局小字下限（计数、时间这一档），比它小的字抬到它。变换缩放的画布按缩放比换算回画布像素。 */
+.bubbleStack { --dot-type-k: .848; --dot-fs-min: 8.75px; }
+
+
+/* 简洁版精灵通知：类型色与页面统一；不改变通知的交互和送达逻辑。 */
+:global(html[data-lite-theme]) .bubbleStack { --nb-gold: var(--blue); --nb-ink: var(--fg); --nb-muted: var(--muted); }
+:global(html[data-lite-theme]) .bubble { color: var(--fg); background: var(--card); border-color: var(--rule); box-shadow: var(--shadow); }
+:global(html[data-lite-theme]) .bubble[data-kind="confirm"], :global(html[data-lite-theme]) .bubble[data-kind="input"] { border-color: var(--orange); box-shadow: var(--shadow); }
+:global(html[data-lite-theme]) .bubble[data-tone="done"] { border-color: var(--blue); }
+:global(html[data-lite-theme]) .bubble[data-tone="failed"] { border-color: var(--danger); }
+:global(html[data-lite-theme]) .bubble[data-tone="reminder"] { background: var(--pink-soft); border-color: var(--pink); }
+:global(html[data-lite-theme]) .bubble:first-child::after, :global(html[data-lite-theme]) .bubbleStack[data-side="above"] .bubble:last-of-type::after { background: var(--card); }
+:global(html[data-lite-theme]) .bubble[data-tone="reminder"]:first-child::after, :global(html[data-lite-theme]) .bubbleStack[data-side="above"] .bubble[data-tone="reminder"]:last-of-type::after { background: var(--pink-soft); }
+:global(html[data-lite-theme]) .bubbleEyebrow { color: var(--blue); }
+:global(html[data-lite-theme]) .bubble[data-kind="confirm"] .bubbleEyebrow, :global(html[data-lite-theme]) .bubble[data-kind="input"] .bubbleEyebrow { color: var(--orange-text); }
+:global(html[data-lite-theme]) .bubble[data-tone="done"] .bubbleEyebrow { color: var(--blue); }
+:global(html[data-lite-theme]) .bubble[data-tone="failed"] .bubbleEyebrow { color: var(--danger); }
+:global(html[data-lite-theme]) .bubble[data-tone="reminder"] .bubbleEyebrow { color: var(--pink-ink); }
+:global(html[data-lite-theme]) .bubbleRisk { color: var(--orange-text); background: var(--orange-soft); border-color: var(--orange); }
+:global(html[data-lite-theme]) .bubbleRisk b { color: var(--orange-text); }
+:global(html[data-lite-theme]) .bubbleStack .bubbleButton { color: var(--fg); background: var(--card); border-color: var(--stroke); }
+:global(html[data-lite-theme]) .bubbleStack .bubbleButton[data-variant="primary"] { color: var(--on-blue); background: var(--blue-btn); border-color: var(--blue-btn); }
+:global(html[data-lite-theme]) .bubbleQueued { color: var(--muted); background: var(--card); border-color: var(--rule); }
+:global(html[data-lite-theme]) .spriteBadge, :global(html[data-lite-theme]) .spriteBadge[data-sprite-badge="unread"] { color: var(--on-blue); background: var(--blue-btn); border-color: var(--card); box-shadow: none; }

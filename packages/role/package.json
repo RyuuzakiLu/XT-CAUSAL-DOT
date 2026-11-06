@@ -1,0 +1,10 @@
+{
+  "name": "@xtcausal/dot-role",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DOT 角色（前台/后台）由代码定死：只注入本角色的角色文件，后台在工具层拿掉派活工具",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": { ".": "./lib/index.js" },
+  "files": ["lib"]
+}

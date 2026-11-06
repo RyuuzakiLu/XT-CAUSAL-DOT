@@ -1,0 +1,20 @@
+# DOT 独立工作区：只有我们自己的包，官方 DSH 包来自 npm 固定版本（0.2.1-rc.2）。
+# 【不】把 upstream/dsh-clean 加进来——那是只读基线，不是构建成员。
+packages:
+  - packages/*
+  # Typert 分析用的源码面影子（scripts/gen-typert.mjs 生成），不是 workspace 成员。
+  - '!packages/.typert-vendor'
+
+# pnpm 10+ 默认拒绝执行依赖的安装脚本（strictDepBuilds）：默认拒绝，只放行确有需要的。
+# node-pty 要 ConPTY 原生二进制，koffi 是 Windows 持久写透出版依赖，esbuild/unrs-resolver 是构建工具本机二进制；
+# 其余显式拒绝——它们只是"带脚本"，脚本对我们是空操作。
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true
+  node-pty: true
+  koffi: true
+  '@deepseek-ai/dsh-subprocess-local': true
+  '@google/genai': false
+  protobufjs: false
+  node-addon-require-builtin: false
+  msgpackr-extract: false

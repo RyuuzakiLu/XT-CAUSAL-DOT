@@ -1,0 +1,10 @@
+{
+  "name": "@xtcausal/dot-manual",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DOT 用户手册：给模型一个 dot_manual 工具查手册，并在 system prompt 里注入用法和章节目录",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": { ".": "./lib/index.js" },
+  "files": ["lib", "DOT-USER-MANUAL.md"]
+}

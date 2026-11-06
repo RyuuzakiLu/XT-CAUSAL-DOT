@@ -1,0 +1,17 @@
+{
+  "name": "@xtcausal/dot-persona",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "云端 DOT：每个账号自己的 DOT 名称、称呼、性别与人格设定（引导页 + 设置 + LLM 扩写）",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./routes": "./lib/routes.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "PERSONA-TEMPLATE.md"
+  ]
+}

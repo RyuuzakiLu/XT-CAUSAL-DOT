@@ -1,0 +1,6 @@
+{
+  "//": "Host 面插件：不需要 DOM。依赖 @xtcausal/dot-contracts 走工作区软链。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "rootDir": "src", "outDir": "lib/types" },
+  "include": ["src"]
+}

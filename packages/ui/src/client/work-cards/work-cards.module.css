@@ -1,0 +1,213 @@
+/* ================================================================
+   DOT 工作卡 · 对话里的小卡样式
+   ▍这是什么
+   工作空间主卡的缩小版：同一套深蓝玻璃底、玫瑰金双线边、宋体标题、
+   绿色（已完成）/ 蓝色（当前）阶段线。尺寸用 px，放进原生消息流里不跟舞台缩放。
+   ▍修改铁律
+   1. 可点区域不小于 40px 高。
+   2. 配色跟 workspace.module.css 保持一致，改一边要同步另一边。
+   *更新：2026-10-24 · 建立*
+================================================================ */
+
+.cardStack { display: grid; gap: 8px; width: min(100%, 300px); max-width: 100%; min-width: 0; margin: 4px 0; }
+
+:global(html[data-lite-theme]) .cardStack { width: 100%; grid-template-columns: minmax(0, 1fr); }
+
+.chatCard {
+  --wc-gold: #e2b48f;
+  --wc-gold-soft: rgba(226, 180, 143, .5);
+  --wc-ink: #f6ece0;
+  --wc-muted: rgba(240, 226, 210, .68);
+  --wc-done: #6fd39a;
+  --wc-current: #6fb2ff;
+  --wc-failed: #ff8c84;
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  color: var(--wc-ink);
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(120, 150, 230, .18), transparent 62%),
+    linear-gradient(180deg, rgba(20, 30, 62, .94), rgba(9, 14, 34, .96));
+  border: 1px solid var(--wc-gold-soft);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .45), 0 10px 26px rgba(0, 0, 0, .42), inset 0 0 18px rgba(226, 180, 143, .07);
+  animation: wcEnter .32s ease-out both;
+}
+.chatCard::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 11px;
+  border: 1px solid rgba(226, 180, 143, .2);
+  pointer-events: none;
+}
+.chatCard::after {
+  content: '✦';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: max(var(--dot-fs-min, 0px), calc(11px * var(--dot-type-k, 1)));
+  line-height: 1;
+  color: var(--wc-gold);
+  text-shadow: 0 0 6px rgba(226, 180, 143, .7);
+  pointer-events: none;
+}
+.chatCard[data-tone="done"] { border-color: rgba(111, 211, 154, .5); }
+.chatCard[data-tone="failed"] { border-color: rgba(255, 140, 132, .55); }
+.chatCard[data-tone="attention"] { border-color: rgba(255, 205, 120, .7); }
+
+.chatCardHit {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--dot-font-body);
+}
+.chatCardHit:focus-visible { outline: 2px solid var(--wc-gold); outline-offset: 2px; }
+.chatCardHit:active { background: rgba(255, 255, 255, .03); }
+
+.chatCardBar { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+.chatCardTag { display: inline-flex; align-items: center; gap: 4px; font-size: max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1))); letter-spacing: .08em; color: var(--wc-gold, #e2b48f); white-space: nowrap; }
+.chatCardTag svg { width: 11px; height: 11px; flex: none; }
+.chatCardTime { font-size: max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1))); color: var(--wc-muted); white-space: nowrap; }
+
+.chatCardTitle {
+  font-family: var(--dot-font-heading);
+  font-size: max(var(--dot-fs-min, 0px), calc(14px * var(--dot-type-k, 1)));
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--wc-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.chatCardChips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chatCardChip {
+  font-style: normal;
+  font-size: max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1)));
+  line-height: 1;
+  padding: 4px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--wc-current);
+  background: rgba(111, 178, 255, .12);
+  border: 1px solid rgba(111, 178, 255, .35);
+}
+.chatCardChip[data-tone="plain"] { color: var(--wc-muted); background: rgba(255, 255, 255, .05); border-color: rgba(255, 255, 255, .14); }
+.chatCardChip[data-status="succeeded"] { color: var(--wc-done); background: rgba(111, 211, 154, .12); border-color: rgba(111, 211, 154, .38); }
+.chatCardChip[data-status="failed"], .chatCardChip[data-status="cancelled"] { color: var(--wc-failed); background: rgba(255, 140, 132, .1); border-color: rgba(255, 140, 132, .38); }
+.chatCardChip[data-status="waiting-approval"], .chatCardChip[data-status="waiting-input"] { color: #ffd28a; background: rgba(255, 205, 120, .12); border-color: rgba(255, 205, 120, .45); }
+
+.chatCardStages { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 2px 2px 0; }
+.chatCardStages::before { content: ''; position: absolute; left: 10px; right: 10px; top: 50%; height: 1px; background: linear-gradient(90deg, rgba(111, 211, 154, .55), rgba(226, 180, 143, .3)); }
+.chatCardStages i {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-style: normal;
+  background: rgba(10, 16, 38, 1);
+  border: 1px solid rgba(255, 255, 255, .22);
+  color: var(--wc-muted);
+}
+.chatCardStages b { font-size: max(var(--dot-fs-min, 0px), calc(9px * var(--dot-type-k, 1))); font-weight: 600; line-height: 1; }
+.chatCardStages i[data-state="done"] { border-color: var(--wc-done); color: var(--wc-done); }
+.chatCardStages i[data-state="current"] { border-color: var(--wc-current); color: #fff; background: rgba(40, 90, 170, 1); box-shadow: 0 0 8px rgba(111, 178, 255, .65); }
+.chatCardStages i[data-state="failed"] { border-color: var(--wc-failed); color: var(--wc-failed); }
+
+.chatCardProgress { position: relative; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, .1); }
+.chatCardProgress i { position: absolute; inset: 0; transform-origin: left center; background: linear-gradient(90deg, var(--wc-current), #b6dcff); transition: transform .5s ease; }
+
+.chatCardSummary { font-size: max(var(--dot-fs-min, 0px), calc(11.5px * var(--dot-type-k, 1))); line-height: 1.5; color: var(--wc-muted); overflow-wrap: anywhere; }
+.chatCardSummary b { font-weight: 600; color: var(--wc-ink); }
+.chatCardFoot { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 6px; border-top: 1px solid rgba(226, 180, 143, .16); font-size: max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1))); color: var(--wc-muted); }
+.chatCardFoot > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chatCardOpen { flex: none; color: var(--wc-gold); }
+
+.candidates {
+  --wc-gold: #e2b48f;
+  display: grid;
+  gap: 6px;
+  width: min(100%, 300px);
+  padding: 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(20, 30, 62, .92), rgba(9, 14, 34, .95));
+  border: 1px solid rgba(226, 180, 143, .45);
+  color: #f6ece0;
+  font-family: var(--dot-font-body);
+}
+.candidate {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+  min-height: 44px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(226, 180, 143, .2);
+}
+.candidate:focus-visible { outline: 2px solid var(--wc-gold); outline-offset: 1px; }
+.candidate strong { font-family: var(--dot-font-heading); font-size: max(var(--dot-fs-min, 0px), calc(12.5px * var(--dot-type-k, 1))); font-weight: 500; overflow-wrap: anywhere; }
+.candidate em { font-style: normal; font-size: max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1))); color: #6fb2ff; white-space: nowrap; }
+.candidate em[data-status="succeeded"] { color: #6fd39a; }
+.candidate em[data-status="failed"], .candidate em[data-status="cancelled"] { color: #ff8c84; }
+.candidate em[data-status="waiting-approval"], .candidate em[data-status="waiting-input"] { color: #ffd28a; }
+.candidate span { grid-column: 1 / -1; font-size: max(var(--dot-fs-min, 0px), calc(10.5px * var(--dot-type-k, 1))); color: rgba(240, 226, 210, .66); overflow-wrap: anywhere; }
+
+.pending { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 12px; border-radius: 12px; font-size: max(var(--dot-fs-min, 0px), calc(11.5px * var(--dot-type-k, 1))); color: rgba(240, 226, 210, .78); background: rgba(14, 20, 44, .7); border: 1px solid rgba(226, 180, 143, .28); }
+.pending i { width: 7px; height: 7px; border-radius: 50%; background: #e2b48f; animation: wcPulse 1.2s ease-in-out infinite; }
+.plain { font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); line-height: 1.55; color: rgba(240, 226, 210, .8); white-space: pre-wrap; }
+
+@keyframes wcEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes wcPulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) {
+  .chatCard, .pending i { animation: none; }
+  .chatCardProgress i { transition: none; }
+}
+
+/* 等你处理时的入口按钮（保密表单 / 第三方授权页，2026-10-28）。
+   放在整卡按钮外面，所以单独给高度与对比度；最小 40px 高，手机上也点得准。 */
+.chatCardEntry { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; margin-top: 6px; padding: 0 14px; border: 1px solid rgba(233, 203, 139, .5); border-radius: 999px; color: #ffe6b6; font-size: max(var(--dot-fs-min, 0px), calc(13px * var(--dot-type-k, 1))); text-decoration: none; }
+.chatCardEntry:hover, .chatCardEntry:focus-visible { background: rgba(233, 203, 139, .12); }
+
+/* 简洁版工作候选和占位跟随 01 色卡；工作主卡由 LiteWorkCard 渲染。 */
+:global(html[data-lite-theme]) .candidates {
+  --wc-gold: var(--blue); --wc-muted: var(--muted); color: var(--fg); background: var(--card); border-color: var(--rule);
+}
+:global(html[data-lite-theme]) .chatCardTag { color: var(--blue); }
+:global(html[data-lite-theme]) .candidate { background: var(--subtle); border-color: var(--rule); color: var(--fg); }
+:global(html[data-lite-theme]) .candidate em { color: var(--blue); }
+:global(html[data-lite-theme]) .candidate em[data-status="succeeded"] { color: var(--blue); }
+:global(html[data-lite-theme]) .candidate em[data-status="cancelled"] { color: var(--muted); }
+:global(html[data-lite-theme]) .candidate em[data-status="failed"] { color: var(--danger); }
+:global(html[data-lite-theme]) .candidate em[data-status="waiting-approval"], :global(html[data-lite-theme]) .candidate em[data-status="waiting-input"] { color: var(--orange-text); }
+:global(html[data-lite-theme]) .candidate span, :global(html[data-lite-theme]) .plain, :global(html[data-lite-theme]) .pending { color: var(--muted); }
+:global(html[data-lite-theme]) .pending { background: var(--card); border-color: var(--rule); }
+:global(html[data-lite-theme]) .pending i { background: var(--blue); }
+
+.candidateRow { display: flex; align-items: center; min-width: 0; }
+.candidateRow .candidate { flex: 1; min-width: 0; }
+.choiceHit { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 44px; min-height: 44px; flex: 0 0 44px; cursor: pointer; }
+.choiceHit:focus-visible { outline: 2px solid var(--blue, #7c93ff); outline-offset: -3px; border-radius: 7px; }
+.choiceBox { width: 18px; height: 18px; box-sizing: border-box; border: 1.5px solid var(--muted, #98a0b3); border-radius: 5px; display: grid; place-items: center; }
+.choiceHit[aria-checked="true"] .choiceBox { background: var(--blue, #7c93ff); border-color: transparent; animation: choicePop .28s ease-out; }
+.choiceBox svg { width: 16px; height: 16px; stroke: var(--card, #fff); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.choiceBox path { stroke-dasharray: 1; animation: choiceDraw .22s ease-out; }
+@keyframes choicePop { 0% { transform:scale(.86) } 60% { transform:scale(1.12) } 100% { transform:scale(1) } }
+@keyframes choiceDraw { from { stroke-dashoffset:1 } to { stroke-dashoffset:0 } }
+@media (prefers-reduced-motion: reduce) { .choiceHit[aria-checked="true"] .choiceBox, .choiceBox path { animation:none; } }

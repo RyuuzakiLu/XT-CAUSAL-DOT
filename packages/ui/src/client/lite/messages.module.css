@@ -1,0 +1,48 @@
+.tools { display:flex; flex:none; gap:8px; align-items:center; padding:12px 16px 4px; }
+.filters { position:relative; isolation:isolate; display:flex; flex:1; gap:6px; min-width:0; overflow-x:auto; scrollbar-width:none; }
+.marker { position:absolute; inset:0 auto 0 0; width:var(--tab-width); transform:translateX(var(--tab-start)); border-radius:999px; background:var(--blue-soft); pointer-events:none; }
+.filters::-webkit-scrollbar { display:none; }
+.filters button { position:relative; flex:none; padding:6px 12px; border:1px solid var(--rule); border-radius:999px; background:var(--card); color:var(--muted); font-size:calc(var(--u) * 13); white-space:nowrap; }
+.filters button[aria-selected="true"] { color:var(--blue); border-color:transparent; background:transparent; font-weight:600; }
+.readAll { flex:none; color:var(--blue); font-size:calc(var(--u) * 13); white-space:nowrap; }
+.scroll { overflow-y:auto; flex:1; min-height:0; padding:0 16px calc(24px + env(safe-area-inset-bottom)); }
+.group h2 { margin:18px 0 10px; color:var(--muted); font-size:calc(var(--u) * 12); font-weight:600; }
+.box { overflow:hidden; border:1px solid var(--rule); border-radius:14px; background:var(--card); }
+.item + .item { border-top:1px solid var(--rule); }
+.item[data-tone="proactive"] { background:var(--pink-soft); }
+.row { display:flex; gap:7px; align-items:flex-start; width:100%; padding:14px 12px 12px 5px; text-align:left; }
+.dot { background:var(--blue); opacity:0; flex:none; width:6px; height:6px; margin:8px 0 0; border-radius:50%; }
+.item[data-unread="true"] .dot { opacity:1; }
+.icon { flex:none; display:grid; place-items:center; width:30px; height:30px; border-radius:9px; color:var(--muted); background:var(--subtle); font-weight:700; }
+.item[data-tone="attention"] .icon { color:var(--orange-text); background:var(--orange-soft); }
+.item[data-tone="failed"] .icon { color:var(--danger); background:var(--red-soft); }
+.item[data-tone="done"] .icon { color:var(--blue); background:var(--blue-soft); }
+.item[data-tone="proactive"] .icon { color:var(--pink-ink); background:transparent; }
+.content { flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; }
+.head { display:flex; align-items:flex-start; gap:8px; }
+.head b { flex:1; min-width:0; font-size:calc(var(--u) * 14); font-weight:400; overflow-wrap:anywhere; }
+.item[data-unread="true"] .head b { font-weight:600; }
+.head time { flex:none; color:var(--faint); font-family:var(--mono); font-size:calc(var(--u) * 11); }
+.preview { color:var(--muted); font-size:calc(var(--u) * 13); line-height:1.5; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow-wrap:anywhere; }
+.bottom { display:flex; justify-content:space-between; gap:10px; color:var(--blue); font-size:calc(var(--u) * 12); }
+.bottom em { font-style:normal; color:var(--muted); background:var(--subtle); border-radius:5px; padding:1px 5px; }
+.item[data-tone="attention"] .bottom em { color:var(--orange-text); background:var(--orange-soft); }
+.item[data-tone="proactive"] .bottom em { color:var(--pink-ink); background:transparent; }
+.detail { padding:0 16px 14px 48px; font-size:calc(var(--u) * 13); }
+.detail p { white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.6; }
+.actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:10px; color:var(--blue); }
+.error { color:var(--danger); font-size:calc(var(--u) * 13); }
+.empty { color:var(--muted); padding:30px 0; font-size:calc(var(--u) * 14); }
+.foot { margin:20px 0 0; text-align:center; color:var(--faint); font-size:calc(var(--u) * 12); }
+
+.expand { display:block; margin:-8px 12px 8px auto; padding:4px 0; color:var(--blue); font-size:calc(var(--u) * 12); }
+
+.letterFold { display:grid; grid-template-rows:0fr; opacity:0; }
+.letterFold[aria-hidden="false"] { grid-template-rows:1fr; opacity:1; }
+.clip { min-height:0; overflow:hidden; }
+@media (prefers-reduced-motion: no-preference) {
+  .marker { transition:transform 300ms cubic-bezier(.2,.75,.2,1), width 300ms ease; }
+  .letterFold { transition:grid-template-rows 240ms ease-in-out, opacity 180ms ease-in; }
+  .letterFold[aria-hidden="false"] { transition:grid-template-rows 320ms cubic-bezier(.22,.65,.25,1), opacity 250ms ease-out; }
+  .dot { transition:opacity 250ms ease-out; }
+}

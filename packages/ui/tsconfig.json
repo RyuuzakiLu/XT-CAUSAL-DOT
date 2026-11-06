@@ -1,0 +1,9 @@
+{
+  "//": "UI 包同时有 Host 面（src/index.ts）与 Client 面（src/client）；取 client 基线的 DOM/JSX 设置，rootDir=src 让类型落到 lib/types/index.d.ts 与 lib/types/client/*。ambient.d.ts 是纯类型合并入口，不产出 JS。",
+  "extends": "../../tsconfig.base.client.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["ambient.d.ts", "src"]
+}

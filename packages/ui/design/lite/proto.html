@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DOT 简洁版原型</title>
+<style>
+:root{--bg:#fff;--fg:#0a0a0a;--muted:#6b6b6b;--faint:#a3a3a3;--line:rgba(0,0,0,.08);--line2:rgba(0,0,0,.16);--surface:#f5f5f5;--scrim:rgba(0,0,0,.32);
+--font:-apple-system,"SF Pro Text","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:15px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0}
+.app{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden}
+svg.g{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.top{flex:none;height:52px;display:flex;align-items:center;gap:2px;padding:0 6px;border-bottom:1px solid var(--line)}
+.ib{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;position:relative}
+.head{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.head b{font-size:16px;font-weight:600;letter-spacing:.01em}.head span{font-size:11.5px;color:var(--muted)}
+.head span i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--fg);margin-right:5px;vertical-align:1px}
+.badge{position:absolute;top:6px;right:5px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--fg);color:var(--bg);font:600 10px/16px var(--font);text-align:center;box-shadow:0 0 0 2px var(--bg)}
+.flow{flex:1;overflow:hidden;padding:18px 18px 0;display:flex;flex-direction:column;gap:16px}
+.day{align-self:center;font-size:11.5px;color:var(--faint);letter-spacing:.04em}
+.me{align-self:flex-end;max-width:78%;background:var(--surface);border-radius:18px 18px 6px 18px;padding:9px 14px}
+.ai{max-width:100%;color:var(--fg)}.ai p{margin:0 0 6px}
+.who{font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.card{border:1px solid var(--line2);border-radius:14px;padding:12px 14px 14px;background:var(--bg)}
+.card .row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.card .row time{margin-left:auto;color:var(--faint)}
+.card h3{margin:6px 0 2px;font-size:15px;font-weight:600;line-height:1.35}
+.card .doing{font-size:13px;color:var(--muted)}
+.card .ask{margin:10px 0 0;padding:10px 12px;background:var(--surface);border-radius:10px;font-size:13.5px}
+.card .ask small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.mk{width:8px;height:8px;border-radius:50%;flex:none}.mk.att{background:var(--fg);box-shadow:0 0 0 3px rgba(0,0,0,.12)}.mk.run{border:1.5px solid var(--fg)}.mk.done{background:var(--faint)}.mk.fail{background:var(--fg);transform:rotate(45deg);border-radius:1px;width:7px;height:7px}
+.tag{font-weight:600;color:var(--fg)}
+.btns{display:flex;gap:8px;margin-top:12px}
+.p{flex:1;height:40px;border-radius:11px;background:var(--fg);color:var(--bg);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.s{flex:1;height:40px;border-radius:11px;border:1px solid var(--line2);font-size:14px;display:flex;align-items:center;justify-content:center}
+.s.narrow{flex:0 0 84px}
+.bar{height:2px;background:var(--line);border-radius:2px;margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;width:45%;background:var(--fg)}
+.composer{flex:none;padding:10px 12px 14px;border-top:1px solid transparent}
+.box{display:flex;align-items:flex-end;gap:6px;border:1px solid var(--line2);border-radius:22px;padding:6px 6px 6px 8px;min-height:48px}
+.box .ph{flex:1;align-self:center;color:var(--faint);padding-left:4px}
+.send{width:36px;height:36px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center}
+.send svg.g{width:18px;height:18px;stroke-width:2}
+.small{width:36px;height:36px;display:grid;place-items:center;color:var(--muted)}
+/* drawer */
+.scrim{position:absolute;inset:0;background:var(--scrim)}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:312px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.15)}
+.dh{padding:22px 20px 14px;display:flex;align-items:center;gap:12px}
+.av{width:36px;height:36px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-weight:600;font-size:14px;letter-spacing:.04em}
+.dh b{display:block;font-size:16px}.dh span{font-size:12px;color:var(--muted)}
+.newc{margin:4px 16px 10px;height:42px;border-radius:12px;border:1px solid var(--line2);display:flex;align-items:center;gap:8px;padding:0 12px;font-weight:500}
+.nav{padding:4px 8px}
+.nv{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:10px;font-size:15px}
+.nv.cur{background:var(--surface);font-weight:600}
+.nv em{margin-left:auto;font-style:normal;font-size:12px;color:var(--muted)}
+.nv em.k{color:var(--bg);background:var(--fg);border-radius:9px;padding:0 7px;line-height:18px;font-weight:600}
+.sec{padding:16px 20px 6px;font-size:12px;color:var(--faint);letter-spacing:.06em}
+.hist{padding:0 8px}.hist div{height:38px;display:flex;align-items:center;padding:0 12px;font-size:14px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist div.cur{font-weight:600}
+.df{margin-top:auto;border-top:1px solid var(--line);padding:6px 8px 14px}
+/* pages */
+.pg{flex:1;overflow:hidden}
+.seg{display:flex;gap:6px;padding:12px 16px 4px}.seg span{height:30px;padding:0 12px;border-radius:15px;display:flex;align-items:center;font-size:13px;color:var(--muted);border:1px solid var(--line)}.seg span.on{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:600}
+.gt{padding:18px 20px 8px;font-size:12px;color:var(--faint);letter-spacing:.06em;display:flex}.gt a{margin-left:auto;color:var(--fg);font-weight:500;letter-spacing:0}
+.li{display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line);align-items:flex-start}
+.li .mk{margin-top:7px}
+.li .t{flex:1;min-width:0}.li b{display:block;font-weight:500;font-size:15px;line-height:1.35}.li span{font-size:13px;color:var(--muted)}
+.li time{font-size:12px;color:var(--faint);white-space:nowrap}
+.li.un b{font-weight:600}
+.pad{padding:0 16px}
+/* toast */
+.toast{position:absolute;left:10px;right:10px;top:58px;background:var(--fg);color:var(--bg);border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 12px 32px rgba(0,0,0,.22)}
+.toast .t{flex:1}.toast small{display:block;font-size:11.5px;opacity:.6}.toast b{font-size:14.5px;font-weight:600}
+.toast .go{font-size:13px;font-weight:600;padding:6px 12px;border-radius:9px;background:rgba(255,255,255,.14)}
+.banner{display:flex;align-items:center;gap:10px;margin:0;padding:11px 12px 11px 18px;border-bottom:1px solid var(--line);background:var(--surface);font-size:13.5px}
+.banner .t{flex:1}.banner b{font-weight:600}
+.panel h2{font-size:22px;font-weight:600;letter-spacing:-.01em;margin:18px 20px 2px}
+.panel p.sub{margin:0 20px;color:var(--muted);font-size:13px}
+.cred{border:1px solid var(--line2);border-radius:14px;padding:14px}
+.cred .k{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.cred h3{margin:6px 0 4px;font-size:15px;font-weight:600}
+.cred p{margin:0;font-size:13px;color:var(--muted)}
+.cred .meta{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px;color:var(--faint)}
+.sheet{position:absolute;left:0;right:0;bottom:0;top:96px;background:var(--bg);border-radius:18px 18px 0 0;display:flex;flex-direction:column}
+.sheet .sh{display:flex;align-items:center;padding:14px 8px 8px 20px}.sheet .sh b{flex:1;font-size:17px}
+.kv{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}.kv span{color:var(--muted)}
+.steps{margin:6px 0 0;padding:0;list-style:none}.steps li{display:flex;gap:10px;align-items:center;padding:7px 0;font-size:14px}.steps li i{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line2);flex:none}.steps li.d i{background:var(--fg);border-color:var(--fg)}.steps li.c i{border-color:var(--fg);box-shadow:inset 0 0 0 3px var(--bg);background:var(--fg)}.steps li.d{color:var(--muted)}
+.scr{display:none}.scr.on{display:flex}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+<symbol id="bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5h4"/></symbol>
+<symbol id="edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></symbol>
+<symbol id="up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M4 5.5h16v10H9l-5 4z"/></symbol>
+<symbol id="work" viewBox="0 0 24 24"><path d="M4 7.5h16v11H4zM9 7.5V5h6v2.5"/></symbol>
+<symbol id="mail" viewBox="0 0 24 24"><path d="M3.5 6h17v12h-17zM3.5 6l8.5 7 8.5-7"/></symbol>
+<symbol id="mem" viewBox="0 0 24 24"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM12 8v4l3 2"/></symbol>
+<symbol id="gear" viewBox="0 0 24 24"><path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></symbol>
+<symbol id="phone" viewBox="0 0 24 24"><path d="M7 3.5h3l1.5 4-2 1.2a10 10 0 0 0 5.8 5.8l1.2-2 4 1.5v3A2 2 0 0 1 18.5 19 15.5 15.5 0 0 1 5 5.5 2 2 0 0 1 7 3.5z"/></symbol>
+<symbol id="close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="open" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8M18 14v5H5V6h5"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="clip" viewBox="0 0 24 24"><path d="M16 8l-6.5 6.5a2 2 0 0 0 3 3L19 11a4 4 0 0 0-6-6l-7 7a6 6 0 0 0 8.5 8.5"/></symbol>
+<symbol id="list" viewBox="0 0 24 24"><path d="M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01"/></symbol>
+</defs></svg>
+
+<!-- 1 主对话页 -->
+<div class="app scr" id="p-chat">
+  <header class="top"><button class="ib"><svg class="g"><use href="#menu"/></svg></button>
+    <div class="head"><b>ASTRA</b><span><i></i>已连接 · 1 件工作进行中</span></div>
+    <button class="ib"><svg class="g"><use href="#bell"/></svg><span class="badge">2</span></button>
+    <button class="ib"><svg class="g"><use href="#edit"/></svg></button></header>
+  <div class="flow">
+    <div class="day">今天 06:40</div>
+    <div class="me">帮我把这周的 AI 新闻整理成五条要点，放进星邮匣。</div>
+    <div class="ai"><div class="who">ASTRA</div><p>好，交给后台去做了。做完会写信到星邮匣，你可以先忙别的。</p></div>
+    <div class="card"><div class="row"><span class="mk run"></span><span class="tag">进行中</span><span>· 第 2/4 步</span><time>刚刚</time></div>
+      <h3>整理本周 AI 新闻五条要点</h3><div class="doing">正在读第 3 篇来源</div><div class="bar"><i></i></div></div>
+    <div class="me">顺便看看明天上海的天气。</div>
+    <div class="ai"><div class="who">ASTRA</div><p>查天气要先连上和风天气，我已经让后台去拿授权了。</p></div>
+  </div>
+  <div class="composer"><div class="box"><button class="small"><svg class="g"><use href="#plus"/></svg></button><span class="ph">对 ASTRA 说点什么…</span><button class="send"><svg class="g"><use href="#up"/></svg></button></div></div>
+</div>
+
+<!-- 2 侧边抽屉 -->
+<div class="app scr" id="p-drawer">
+  <header class="top"><button class="ib"><svg class="g"><use href="#menu"/></svg></button><div class="head"><b>ASTRA</b><span><i></i>已连接</span></div><button class="ib"><svg class="g"><use href="#bell"/></svg></button><button class="ib"><svg class="g"><use href="#edit"/></svg></button></header>
+  <div class="flow"><div class="me">早上好</div></div>
+  <div class="scrim"></div>
+  <aside class="drawer">
+    <div class="dh"><div class="av">DOT</div><div><b>ASTRA</b><span>qingdi2013 · 已连接</span></div></div>
+    <button class="newc"><svg class="g"><use href="#edit"/></svg>新对话</button>
+    <nav class="nav">
+      <div class="nv cur"><svg class="g"><use href="#chat"/></svg>对话</div>
+      <div class="nv"><svg class="g"><use href="#work"/></svg>后台工作<em class="k">1</em></div>
+      <div class="nv"><svg class="g"><use href="#mail"/></svg>星邮匣<em>2 封未读</em></div>
+      <div class="nv"><svg class="g"><use href="#bell"/></svg>消息</div>
+      <div class="nv"><svg class="g"><use href="#mem"/></svg>记忆<em>53 条</em></div>
+      <div class="nv"><svg class="g"><use href="#gear"/></svg>设置</div>
+    </nav>
+    <div class="sec">最近对话</div>
+    <div class="hist"><div class="cur">本周 AI 新闻</div><div>测试后台连通性</div><div>页面回跳问题排查</div><div>选项卡组件实现</div></div>
+    <div class="df"><div class="nv"><svg class="g"><use href="#phone"/></svg>和 DOT 打电话</div></div>
+  </aside>
+</div>
+
+<!-- 3 工作卡带审批 -->
+<div class="app scr" id="p-approve">
+  <header class="top"><button class="ib"><svg class="g"><use href="#menu"/></svg></button><div class="head"><b>ASTRA</b><span><i></i>1 件等你确认</span></div><button class="ib"><svg class="g"><use href="#bell"/></svg><span class="badge">1</span></button><button class="ib"><svg class="g"><use href="#edit"/></svg></button></header>
+  <div class="flow">
+    <div class="me">把昨天那份周报发到我的知序待办里。</div>
+    <div class="ai"><div class="who">ASTRA</div><p>后台在做了，写入知序前要你确认一下。</p></div>
+    <div class="card"><div class="row"><span class="mk att"></span><span class="tag">等你确认</span><time>1 分钟前</time></div>
+      <h3>把周报写进知序待办</h3>
+      <div class="ask">要调用 zhixu_create_task 新建一条待办<small>标题「周报 10/30」，截止明天 18:00</small></div>
+      <div class="btns"><button class="p"><svg class="g" style="width:18px;height:18px"><use href="#check"/></svg>确认这一次</button><button class="s narrow">拒绝</button></div></div>
+    <div class="card"><div class="row"><span class="mk done"></span><span>已完成</span><time>8 分钟前</time></div><h3>整理本周 AI 新闻五条要点</h3><div class="doing">1 个成果 · 已写信到星邮匣</div></div>
+  </div>
+  <div class="composer"><div class="box"><button class="small"><svg class="g"><use href="#plus"/></svg></button><span class="ph">对 ASTRA 说点什么…</span><button class="send"><svg class="g"><use href="#up"/></svg></button></div></div>
+</div>
+
+<!-- 4 凭证卡 / 远程登录卡 -->
+<div class="app scr" id="p-cred">
+  <header class="top"><button class="ib"><svg class="g"><use href="#menu"/></svg></button><div class="head"><b>ASTRA</b><span><i></i>2 件等你处理</span></div><button class="ib"><svg class="g"><use href="#bell"/></svg><span class="badge">2</span></button><button class="ib"><svg class="g"><use href="#edit"/></svg></button></header>
+  <div class="flow">
+    <div class="me">明天上海天气怎么样？</div>
+    <div class="cred"><div class="k"><span class="mk att"></span><b style="color:var(--fg)">要你补充</b>· 和风天气</div><h3>填一下和风天气的 API Key</h3><p>在 DOT 保密页里填，ASTRA 看不到原文。填完工作自动接着跑。</p>
+      <div class="btns"><button class="p"><svg class="g" style="width:18px;height:18px"><use href="#open"/></svg>去填写</button></div><div class="meta"><span>查明天上海天气</span><span>链接 1 小时内有效</span></div></div>
+    <div class="cred"><div class="k"><span class="mk att"></span><b style="color:var(--fg)">要你登录</b>· 远程浏览器</div><h3>登录小红书后继续</h3><p>在远程浏览器里登录一次，登录后它自己接着做。</p>
+      <div class="btns"><button class="p"><svg class="g" style="width:18px;height:18px"><use href="#open"/></svg>去登录</button><button class="s narrow">补充一句</button></div><div class="meta"><span>收藏夹整理</span><span>过期后打开 DOT 自动换新</span></div></div>
+  </div>
+  <div class="composer"><div class="box"><button class="small"><svg class="g"><use href="#plus"/></svg></button><span class="ph">对 ASTRA 说点什么…</span><button class="send"><svg class="g"><use href="#up"/></svg></button></div></div>
+</div>
+
+<!-- 5 顶部横幅 + toast -->
+<div class="app scr" id="p-banner">
+  <header class="top"><button class="ib"><svg class="g"><use href="#menu"/></svg></button><div class="head"><b>ASTRA</b><span><i></i>已连接</span></div><button class="ib"><svg class="g"><use href="#bell"/></svg><span class="badge">3</span></button><button class="ib"><svg class="g"><use href="#edit"/></svg></button></header>
+  <div class="banner"><div class="t"><b>你不在时完成了 2 件，1 件没做成</b><br><span style="color:var(--muted);font-size:12.5px">点这里去后台工作看</span></div><button class="ib"><svg class="g" style="width:18px;height:18px"><use href="#close"/></svg></button></div>
+  <div class="flow"><div class="day">今天 07:12</div><div class="ai"><div class="who">ASTRA</div><p>今晚想聊点什么？</p></div></div>
+  <div class="toast"><div class="t"><small>后台工作 · 做完了</small><b>整理本周 AI 新闻五条要点</b></div><button class="go">查看</button></div>
+  <div class="composer"><div class="box"><button class="small"><svg class="g"><use href="#plus"/></svg></button><span class="ph">对 ASTRA 说点什么…</span><button class="send"><svg class="g"><use href="#up"/></svg></button></div></div>
+</div>
+
+<!-- 6 消息列表 -->
+<div class="app scr" id="p-inbox">
+  <header class="top"><button class="ib"><svg class="g"><use href="#back"/></svg></button><div class="head"><b>消息</b><span>3 条新提醒</span></div><button class="ib" style="width:auto;padding:0 12px;font-size:14px;font-weight:500">全部已读</button></header>
+  <div class="pg">
+    <div class="gt">需要你</div>
+    <div class="li un"><span class="mk att"></span><div class="t"><b>把周报写进知序待办</b><span>等你确认 · 调用 zhixu_create_task</span></div><time>1 分钟前</time></div>
+    <div class="li un"><span class="mk att"></span><div class="t"><b>查明天上海天气</b><span>要你补充 · 和风天气 API Key</span></div><time>3 分钟前</time></div>
+    <div class="gt">更早</div>
+    <div class="li un"><span class="mk done"></span><div class="t"><b>整理本周 AI 新闻五条要点</b><span>做完了 · 1 个成果</span></div><time>8 分钟前</time></div>
+    <div class="li"><span class="mk fail"></span><div class="t"><b>抓取 GitHub 趋势榜</b><span>没做成 · 网页超时</span></div><time>2 小时前</time></div>
+    <div class="li"><span class="mk done"></span><div class="t"><b>你不在时完成了 2 件，1 件没做成</b><span>汇总</span></div><time>今天 07:12</time></div>
+    <div class="li"><span class="mk done"></span><div class="t"><b>星邮匣：明早 9 点组会提醒</b><span>提醒</span></div><time>昨天</time></div>
+  </div>
+</div>
+
+<!-- 7 后台工作 -->
+<div class="app scr" id="p-work">
+  <header class="top"><button class="ib"><svg class="g"><use href="#menu"/></svg></button><div class="head"><b>后台工作</b><span>1 件进行中 · 1 件等你</span></div><button class="ib"><svg class="g"><use href="#bell"/></svg></button><button class="ib"><svg class="g"><use href="#plus"/></svg></button></header>
+  <div class="pg">
+    <div class="gt">等你处理</div>
+    <div class="pad"><div class="card"><div class="row"><span class="mk att"></span><span class="tag">等你确认</span><time>1 分钟前</time></div><h3>把周报写进知序待办</h3><div class="btns"><button class="p">确认这一次</button><button class="s narrow">拒绝</button></div></div></div>
+    <div class="gt">进行中</div>
+    <div class="li"><span class="mk run"></span><div class="t"><b>整理本周 AI 新闻五条要点</b><span>第 2/4 步 · 正在读第 3 篇来源</span></div><time>刚刚</time></div>
+    <div class="gt">最近</div>
+    <div class="li"><span class="mk done"></span><div class="t"><b>上线冒烟（可忽略）</b><span>已完成 · Example Domain</span></div><time>3 小时前</time></div>
+    <div class="li"><span class="mk fail"></span><div class="t"><b>抓取 GitHub 趋势榜</b><span>没做成 · 网页超时</span></div><time>5 小时前</time></div>
+    <div class="li"><span class="mk done"></span><div class="t"><b>测试后台连通性</b><span>已完成</span></div><time>昨天</time></div>
+  </div>
+</div>
+<script>const id=(location.hash||'#chat').slice(1);document.getElementById("p-"+id).classList.add('on')</script>
+</body></html>

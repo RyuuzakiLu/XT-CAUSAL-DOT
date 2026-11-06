@@ -1,0 +1,66 @@
+{
+  "name": "@xtcausal/dot-memory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DOT 记忆适配：独立 XTMEM 引擎的真实存/召回/纠正/归档删除 + 受控模型工具与上下文消费",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./remote": {
+      "types": "./lib/typert.remote-client.d.ts",
+      "default": "./lib/typert.remote-client.js"
+    },
+    "./typert": {
+      "types": "./lib/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json",
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types/types.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsdown",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@deepseek-ai/dsh-system-prompt": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-typert-protocol": "0.2.1-rc.2",
+    "@deepseek-ai/schemastery": "~3.18.5",
+    "zod": "4.4.3",
+    "@deepseek-ai/dsh-agent": "0.2.1-rc.2"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@deepseek-ai/dsh-system-prompt": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-typert-protocol": "0.2.1-rc.2",
+    "@deepseek-ai/schemastery": "~3.18.5",
+    "zod": "4.4.3",
+    "@xtcausal/dot-contracts": "workspace:*",
+    "@deepseek-ai/dsh-agent": "0.2.1-rc.2"
+  },
+  "files": [
+    "LICENSE",
+    "lib/index.js",
+    "lib/typert.host.js",
+    "lib/typert.host.d.ts",
+    "lib/typert.remote-client.js",
+    "lib/typert.remote-client.d.ts",
+    "lib/types/**/*.d.ts",
+    "scripts/*.py",
+    "vendor/xtmem/**",
+    "requirements.txt",
+    "README.md"
+  ],
+  "license": "MIT"
+}

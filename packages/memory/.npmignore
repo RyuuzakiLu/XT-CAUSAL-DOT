@@ -1,0 +1,7 @@
+# 【不】把 Python 字节码打进发布包：它们与具体 Python 版本绑定，换机器就是废文件，
+# 而且会让包体积翻倍。运行时由引擎自己重新编译。
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+# 引擎自带 .gitignore 是仓库元数据，发布不需要
+vendor/xtmem/.gitignore

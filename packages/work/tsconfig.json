@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src", "outDir": "lib/types", "composite": true,
+    "paths": { "@xtcausal/dot-contracts": ["../../packages/contracts/src/index.ts"] }
+  },
+  "include": ["src"]
+}

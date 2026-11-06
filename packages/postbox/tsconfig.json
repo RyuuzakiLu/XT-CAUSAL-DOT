@@ -1,0 +1,12 @@
+{
+  "//": "Host 面插件：Node + Cordis，无 DOM。依赖官方 0.2.1-rc.2 包的 .d.ts，不建 project references。",
+  "//incremental": "⚠️【勿开】本包不用 project references，增量编译（composite/incremental）会只重编改动文件；tsdown 需要完整 lib/types/*.js，增量产物会让它报 UNRESOLVED_ENTRY。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "composite": false,
+    "incremental": false
+  },
+  "include": ["src"]
+}

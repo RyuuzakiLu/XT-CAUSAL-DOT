@@ -1,0 +1,52 @@
+.filters { flex: none; display: flex; gap: 7px; padding: 12px 16px 4px; overflow-x: auto; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.filters button { flex: none; border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px; background: var(--card); color: var(--muted); font-size: calc(var(--u) * 13); }
+.filters button[aria-selected="true"] { border-color: transparent; background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+.drawerGroups { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; margin: 0 8px; }
+.detailCard, .detailPanel { border: 1px solid var(--rule); border-radius: 16px; background: var(--card); padding: 14px; box-shadow: var(--shadow); }
+.detailCard { margin: 10px 0 18px; }
+.detailSection { margin: 16px 0; }
+.detailSectionTitle { margin: 0 0 8px 2px; color: var(--muted); font-size: calc(var(--u) * 12); font-weight: 600; }
+.detailPanel p { margin: 0; overflow-wrap: anywhere; }
+.detailFooter { display: flex; flex: none; gap: 8px; padding: 12px 18px calc(12px + var(--safe-b)); border-top: 1px solid var(--rule); background: var(--bg); }
+.detailFooter > button { flex: 1; }
+/* 09b 失败原因：一句人话（正文色，不用红；红只给状态标记）；原始信息收起，灰色等宽。 */
+.reason { margin: 0; font-size: calc(var(--u) * 14.5); line-height: 1.6; color: var(--fg); }
+.raw { margin-top: 10px; }
+.raw > summary { cursor: pointer; width: fit-content; font-size: calc(var(--u) * 13); color: var(--muted); list-style: none; padding: 2px 0; }
+.raw > summary::-webkit-details-marker { display: none; }
+.raw > summary::before { content: "›"; display: inline-block; margin-right: 6px; transition: transform .15s ease; }
+.raw[open] > summary::before { transform: rotate(90deg); }
+.raw > pre { margin: 8px 0 0; padding: 10px 12px; max-height: 40vh; overflow: auto; border-radius: 10px; background: var(--subtle); color: var(--muted); font-family: var(--mono); font-size: calc(var(--u) * 12); line-height: 1.55; white-space: pre-wrap; word-break: break-all; }
+
+/* 09 后台列表：已结束共用卡底；详情默认收起，动作不嵌套。 */
+.finishedList { overflow: hidden; border: 1px solid var(--rule); border-radius: 14px; background: var(--card); }
+.listRow { display: flex; flex-wrap: wrap; align-items: center; min-width: 0; border: 1px solid var(--rule); border-radius: 14px; background: var(--card); margin-bottom: 10px; }
+.finishedList .listRow { border: 0; border-radius: 0; margin: 0; }
+.finishedList .listRow + .listRow { border-top: 1px solid var(--rule); }
+.rowOpen { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; min-height: 52px; padding: 12px; border: 0; background: transparent; color: var(--fg); text-align: left; font: inherit; }
+.rowMark { flex: none; width: 16px; text-align: center; color: var(--muted); }
+.listRow[data-kind="done"] .rowMark, .listRow[data-kind="active"] .rowMark { color: var(--blue); }
+.listRow[data-kind="failed"] .rowMark, .listRow[data-kind="failed"] .rowMeta { color: var(--red, #D92D20); }
+.listRow[data-kind="attention"] .rowMark, .listRow[data-kind="attention"] .rowMeta { color: var(--orange, #A8500A); }
+.listRow[data-kind="idle"] .rowTitle { color: var(--muted); }
+.rowTitle { min-width: 0; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: calc(var(--u) * 14); }
+.rowMeta { flex: none; color: var(--muted); font-size: calc(var(--u) * 12); white-space: nowrap; }
+.rowRetry { flex: none; min-height: 44px; padding: 8px 12px 8px 0; border: 0; background: transparent; color: var(--blue); font: inherit; font-size: calc(var(--u) * 13); }
+.rowRetry:disabled { opacity: .55; }
+.rowNote { flex-basis: 100%; margin: 0; padding: 0 12px 10px; color: var(--muted); overflow-wrap: anywhere; font-size: calc(var(--u) * 12); }
+
+.filters { position: relative; isolation: isolate; }
+.filters button { position: relative; }
+.filters button[aria-selected="true"] { background: transparent; }
+.tabMarker { position: absolute; top: 12px; bottom: 4px; left: 0; border-radius: 999px; background: var(--blue-soft); width: var(--tab-width); transform: translateX(var(--tab-start)); pointer-events: none; }
+.detailMotion[data-open="false"] { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .tabMarker { transition: transform 300ms cubic-bezier(.2,.75,.2,1), width 300ms ease; }
+  .detailMotion [role="dialog"] { animation: none; translate: 0; transition: translate 340ms cubic-bezier(.2,.75,.2,1); }
+  @starting-style { .detailMotion [role="dialog"] { translate: 100% 0; } }
+  .detailMotion[data-open="false"] [role="dialog"] { translate: 100% 0; transition-duration: 260ms; transition-timing-function: ease-in-out; }
+  .detailMotion > div > button { animation: none; opacity: 1; transition: opacity 260ms ease; }
+  @starting-style { .detailMotion > div > button { opacity: 0; } }
+  .detailMotion[data-open="false"] > div > button { opacity: 0; }
+}

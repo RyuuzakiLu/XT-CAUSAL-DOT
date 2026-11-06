@@ -1,0 +1,8 @@
+{
+  "//": "Client 面额外打开 DOM 与 JSX。React 18 的 JSX 运行时来自 node_modules/react，不额外引 @types 到各包。",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  }
+}

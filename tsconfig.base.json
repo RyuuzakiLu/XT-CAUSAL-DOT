@@ -1,0 +1,29 @@
+{
+  "//": "公共 TS 基线：DOT 各包共用。刻意与官方 0.2.1-rc.2 的 tsconfig.base.json 对齐关键项（module esnext / moduleResolution bundler / composite），因为 Typert 生成器是按这套编译选项建立的程序：换成 NodeNext 会让它的符号表在分析包导出时崩溃（实测 getExportsOfModule → undefined.flags）。依赖仍走 node_modules 里官方 .d.ts，不建源码 paths 别名。",
+  "compilerOptions": {
+    "target": "es2024",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "verbatimModuleSyntax": false,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "composite": true,
+    "incremental": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": false,
+    "jsx": "react-jsx"
+  }
+}

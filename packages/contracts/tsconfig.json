@@ -1,0 +1,9 @@
+{
+  "//": "契约包是纯 Host/Client 共用的类型与常量，不需要 DOM；用基础 tsconfig 即可。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["src"]
+}

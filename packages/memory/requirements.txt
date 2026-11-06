@@ -1,0 +1,31 @@
+# ================================================================
+# XTMEM 引擎（packages/memory/vendor/xtmem）的 Python 运行时依赖
+#
+# ▍这是什么
+# 记忆适配器通过子进程调用 vendored 的 `xtmem.py`。Node 侧不需要装这些包，
+# 但**Python 侧必须有**，否则引擎一启动就 ImportError。
+#
+# ▍怎么用
+#   py -m pip install -r packages/memory/requirements.txt      # Windows
+#   python3 -m pip install -r packages/memory/requirements.txt # macOS/Linux
+#
+# ▍为什么单独一个文件而不是写进 README
+# `pip install -r` 要能直接跑；写在文档里靠人抄，一定会漏。
+# 版本给下界不给死，避免和新 Python 版本相互卡死。
+# ================================================================
+
+# 引擎 HTTP 端点（api_server.py / serve 子命令）
+fastapi>=0.110
+uvicorn>=0.27
+httpx>=0.27
+
+# HTTP 客户端与进程/系统观测
+psutil>=5.9
+
+# 中文分词与 NLP（recall 的召回质量依赖）
+jieba>=0.42
+jionlp>=1.5
+numpy>=1.24
+
+# 配置文件解析
+PyYAML>=6.0

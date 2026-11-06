@@ -1,0 +1,179 @@
+{
+  "version": 2,
+  "frameSize": [
+    512,
+    512
+  ],
+  "sheetGrid": [
+    3,
+    2
+  ],
+  "frameOrder": "row-major",
+  "anchor": [
+    0.5,
+    1
+  ],
+  "states": {
+    "idle": {
+      "label": "Idle",
+      "sheet": "sheets/idle.png",
+      "frames": [
+        "frames/idle/00.png",
+        "frames/idle/01.png",
+        "frames/idle/02.png",
+        "frames/idle/03.png",
+        "frames/idle/04.png",
+        "frames/idle/05.png"
+      ],
+      "durationsMs": [
+        700,
+        180,
+        110,
+        180,
+        200,
+        700
+      ],
+      "loop": true,
+      "onComplete": null,
+      "generationPrompt": "Relaxed original idle pose, arms down. Six ordered loop frames: neutral, slight inhale, gentle closed-eye blink, eyes reopened, slight exhale, neutral. Feet fixed."
+    },
+    "thinking": {
+      "label": "Thinking",
+      "sheet": "sheets/thinking.png",
+      "frames": [
+        "frames/thinking/00.png",
+        "frames/thinking/01.png",
+        "frames/thinking/02.png",
+        "frames/thinking/03.png",
+        "frames/thinking/04.png",
+        "frames/thinking/05.png"
+      ],
+      "durationsMs": [
+        700,
+        180,
+        110,
+        180,
+        200,
+        700
+      ],
+      "loop": true,
+      "onComplete": null,
+      "generationPrompt": "Keep the fingertip touching chin thinking pose. Six ordered loop frames: original slight head tilt, gaze subtly up, thoughtful blink, eyes open, tiny head tilt settling, original. Hand stays at chin; feet fixed."
+    },
+    "user-typing": {
+      "label": "User typing",
+      "sheet": "sheets/user-typing.png",
+      "frames": [
+        "frames/user-typing/00.png",
+        "frames/user-typing/01.png",
+        "frames/user-typing/02.png",
+        "frames/user-typing/03.png",
+        "frames/user-typing/04.png",
+        "frames/user-typing/05.png"
+      ],
+      "durationsMs": [
+        700,
+        180,
+        110,
+        180,
+        200,
+        700
+      ],
+      "loop": true,
+      "onComplete": null,
+      "generationPrompt": "This is USER typing, Astra attentively listens and waits; she does NOT type. Keep both hands clasped in front. Six ordered loop frames: original attentive pose, slight forward attentive lean, gentle blink, reopen eyes, tiny nod, original pose. Feet fixed."
+    },
+    "responding": {
+      "label": "AI responding",
+      "sheet": "sheets/responding.png",
+      "frames": [
+        "frames/responding/00.png",
+        "frames/responding/01.png",
+        "frames/responding/02.png",
+        "frames/responding/03.png",
+        "frames/responding/04.png",
+        "frames/responding/05.png"
+      ],
+      "durationsMs": [
+        260,
+        180,
+        220,
+        200,
+        180,
+        400
+      ],
+      "loop": true,
+      "onComplete": null,
+      "generationPrompt": "Keep the original palm-up explaining gesture. Six loop frames: original smile lips closed, lips slightly open speaking, palm lifts subtly, lips close, lips slightly open with palm settling, original. No speech bubble, no text. Feet fixed."
+    },
+    "working": {
+      "label": "Working",
+      "sheet": "sheets/working.png",
+      "frames": [
+        "frames/working/00.png",
+        "frames/working/01.png",
+        "frames/working/02.png",
+        "frames/working/03.png",
+        "frames/working/04.png",
+        "frames/working/05.png"
+      ],
+      "durationsMs": [
+        700,
+        180,
+        110,
+        180,
+        200,
+        700
+      ],
+      "loop": true,
+      "onComplete": null,
+      "generationPrompt": "Keep Astra holding the original open black and gold star book with BOTH hands. Six loop frames: original reading, eyes look slightly down, blink, eyes reopen scanning book, subtle head nod, original reading. Book stays attached to both hands, do not change its design. Feet fixed."
+    },
+    "reminder": {
+      "label": "Reminder",
+      "sheet": "sheets/reminder.png",
+      "frames": [
+        "frames/reminder/00.png",
+        "frames/reminder/01.png",
+        "frames/reminder/02.png",
+        "frames/reminder/03.png",
+        "frames/reminder/04.png",
+        "frames/reminder/05.png"
+      ],
+      "durationsMs": [
+        700,
+        180,
+        110,
+        180,
+        200,
+        700
+      ],
+      "loop": true,
+      "onComplete": null,
+      "generationPrompt": "Keep the original small white envelope with black edges and star seal held in BOTH hands. Six loop frames: original presenting envelope, gently extend envelope a little toward viewer, attentive blink, reopen eyes with small warm smile, bring envelope back slightly, original. No additional props or effects. Feet fixed."
+    },
+    "done": {
+      "label": "Done",
+      "sheet": "sheets/done.png",
+      "frames": [
+        "frames/done/00.png",
+        "frames/done/01.png",
+        "frames/done/02.png",
+        "frames/done/03.png",
+        "frames/done/04.png",
+        "frames/done/05.png"
+      ],
+      "durationsMs": [
+        250,
+        200,
+        250,
+        130,
+        250,
+        900
+      ],
+      "loop": false,
+      "onComplete": "idle",
+      "generationPrompt": "Keep original triumphant V-sign near face, other hand on hip, proud happy expression. Six ordered loop frames: original, tiny proud head raise, V-sign wrist tilts a little, brief delighted blink, eyes reopen and wrist settles, original. Feet fixed, no jumping, no effects."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@xtcausal/dot-turn-context",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DOT 回合上下文：每个用户回合冻结一次当前时间（缓存友好）；自动记忆开启时闲置换新会话并带上一会话最后 6 条记录",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": { ".": "./lib/index.js" },
+  "files": ["lib", "README.md"]
+}

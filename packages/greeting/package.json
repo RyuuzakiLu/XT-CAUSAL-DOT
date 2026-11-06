@@ -1,0 +1,17 @@
+{
+  "name": "@xtcausal/dot-greeting",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "云端 DOT 主动问候：每天按账号偏好的时间（默认 08:00）往用户当前对话里发一条早安（带今日日程、可选天气、久未聊天时一句关心），同日至多一次，免打扰时只进对话和星邮匣不弹；DOT_BRIEF=1 的账号另有 09:00 早报 / 21:00 晚报（发飞书私聊，见 lib/brief.js）",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./core": "./lib/core.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {}
+}

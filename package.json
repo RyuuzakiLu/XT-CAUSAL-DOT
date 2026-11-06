@@ -1,0 +1,33 @@
+{
+  "name": "@xtcausal/dot-root",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "description": "XTCausal DOT：以 DSH 0.2.1-rc.2 为基座、按原生插件机制装配的个人助理",
+  "scripts": {
+    "build": "pnpm -r --workspace-concurrency=3 run build",
+    "build:all": "node ./scripts/build-all.mjs",
+    "dsh": "node ./node_modules/@deepseek-ai/dsh/lib/bin.js",
+    "typecheck": "pnpm -r --workspace-concurrency=3 run typecheck",
+    "typert:gen": "node ./scripts/gen-typert.mjs"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-typert-generator": "0.2.1-rc.2",
+    "@types/node": "^22.20.1",
+    "@types/react": "~18.3.1",
+    "@types/react-dom": "~18.3.0",
+    "immer": "^10.1.1",
+    "lightningcss": "1.33.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsdown": "0.22.2",
+    "typescript": "6.0.3",
+    "vite": "8.2.2",
+    "zustand": "~4.5.7"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@xtcausal/dot-genui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DOT inline-only GenUI server adapter; deliberately no browser client declaration",
+  "main": "index.js",
+  "exports": { ".": "./index.js", "./package.json": "./package.json" },
+  "dependencies": { "@changfenhuang/dsh-genui": "0.15.0" },
+  "peerDependencies": { "@deepseek-ai/cordis": "~4.0.5", "@deepseek-ai/dsh-system-prompt": "0.2.1-rc.2" },
+  "engines": { "node": "^22.19.0 || >=24.0.0" },
+  "license": "MIT"
+}

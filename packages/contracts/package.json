@@ -1,0 +1,27 @@
+{
+  "name": "@xtcausal/dot-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DOT 跨插件公共词汇：工作快照、成果引用、星邮匣事件；纯类型与常量，不含业务规则",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "files": [
+    "LICENSE",
+    "lib/index.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT"
+}

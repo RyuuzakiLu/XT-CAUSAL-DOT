@@ -1,0 +1,9 @@
+{
+  "name": "@xtcausal/dot-persona-routes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "云端 DOT 账号设定的网页接口（/dot-persona/api/*），代码在 ../lib/routes.js",
+  "main": "index.js",
+  "exports": { ".": "./index.js", "./package.json": "./package.json" }
+}

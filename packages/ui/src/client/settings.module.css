@@ -1,0 +1,350 @@
+/* ================================================================
+   个人设置 · 深蓝金边覆盖层
+   ▍这是什么
+   同一设置浮层在手机和电脑自适应；设置中心用书房背景 settings_bg（一级页与二级页共用），内容区独立滚动；快捷设置用底座原画面板。
+   ▍修改铁律
+   1. 【不】让设置撑长底下空间；覆盖层持有自己的滚动。
+   2. 最小按钮44像素，精灵设置不能反过来让设置本身点不到。
+   ▍更新记录
+   *更新：2026-10-24 · 快捷、六组设置与原生配置内容承载*
+   *更新：2026-10-24 · 按七屏参考板改设置中心首页分组卡、快捷设置贴精灵上方、观象台原画透出*
+   *更新：2026-10-24 · 快捷设置改为高版底座 v2 原画面板（qStage 一节），尺寸按单文件验收版实测*
+   *更新：2026-10-24 · 设置中心整面板重做：settings_bg 书房背景（底部对齐）、横条底座分组卡、二级页玻璃卡与金色自绘控件（c* 一节）；旧首页行与旧控件样式删除*
+================================================================ */
+.overlay { position: fixed; inset: 0; z-index: 180; display: grid; place-items: center; background: #020610a8; backdrop-filter: blur(10px); padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); color: #f0dfbd; }
+/* ── 设置中心：一级分组页 + 六个二级页（含原生配置内层）──
+   背景 settings_bg 730×1536：cover + 底部对齐，矮屏只裁顶部星空，底部横幅始终完整。
+   在背景原图上实测：横幅上沿亮线 y≈1328，坐着的 ASTRA 头顶 y≈1275（左侧 x≈40–200）。
+   --s ＝背景 1 像素在屏幕上的长度（与 cover 同算法），卡片区和滚动区都按它跟背景对齐：
+   · 一级页分组卡：从背景 y 261（顶部 17%，与预览构图一致）排到 y 1265，矮屏时从标题栏下方开始；
+   · 二级页滚动区：标题栏下沿到背景 y 1272，最后一项停在横幅（含 ASTRA 头顶）上方。
+   按钮规则前缀写长是为了压过 dot.module.css 的 .shell button 通用样式（含 :hover/:disabled）。 */
+.overlay[data-center=true] { background: #01030ad9; }
+.panel {
+  container-type: size;
+  --hdr-pad: max(14px, calc(env(safe-area-inset-top) + 8px));
+  --hdr: calc(var(--hdr-pad) + 70px);
+  /* 以下三项含 cq 单位，只在子元素里求值（相对本面板）：--s 背景 1px 的屏幕长度，--lt/--lb 分组卡区上下界 */
+  --s: max(calc(100cqw / 730), calc(100cqh / 1536));
+  --lt: max(calc(var(--hdr) + 8px), calc(100cqh - 1275 * var(--s)));
+  --lb: calc(271 * var(--s));
+  position: relative; display: block; overflow: hidden;
+  width: min(100%, max(380px, calc(min(94dvh, 1000px) * .4753))); height: min(94dvh, 1000px); max-height: 100%;
+  border: 1px solid #d9b56a73; border-radius: 22px;
+  background: var(--center-bg) center bottom / cover no-repeat, #050a16;
+  box-shadow: 0 24px 90px #000d;
+  color: #f1e7d0; font: max(var(--dot-fs-min, 0px), calc(15px * var(--dot-type-k, 1)))/1.5 var(--dot-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+.panel[data-view=group], .panel[data-view=native] { --hdr: calc(var(--hdr-pad) + 62px); }
+@media (max-width: 500px) {
+  .overlay[data-center=true] { padding: 0; }
+  .panel { width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; }
+}
+/* 标题栏：左返回、中标题、右 ASTRA 入口（全局精灵入口，任何时候可见） */
+.cHeader { position: absolute; z-index: 3; left: 0; right: 0; top: 0; height: var(--hdr); box-sizing: border-box; padding: var(--hdr-pad) 10px 0; display: grid; grid-template-columns: 58px minmax(0, 1fr) 58px; align-items: start; }
+/* 一级页：标题区占满分组卡上方（背景顶部拱窗星空），返回、标题、ASTRA 入口在其中垂直居中 */
+.panel[data-view=home] .cHeader { height: var(--lt); padding-bottom: 4px; align-items: center; }
+.overlay[data-center=true] .panel[data-view=home] button.cBack { margin-top: 0; }
+.overlay[data-center=true] .panel button.cBack {
+  width: 42px; height: 42px; min-width: 0; min-height: 0; margin: 8px 0 0 4px; padding: 0; display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid #d9b56a8c; background: radial-gradient(circle at 50% 30%, #1c2b4ae6, #08101fe6 75%);
+  box-shadow: inset 0 1px 0 #f6e2a833, 0 0 12px #e3b86a26, 0 4px 12px #0009; color: #f0d48f; position: relative;
+}
+.overlay[data-center=true] .panel button.cBack::after { content: ""; position: absolute; inset: -4px; }
+.overlay[data-center=true] .panel button.cBack:hover:not(:disabled) { border-color: #f2d690; background: radial-gradient(circle at 50% 30%, #243656e6, #0a1426e6 75%); box-shadow: inset 0 1px 0 #f6e2a840, 0 0 16px #e3b86a40, 0 4px 12px #0009; }
+.cBack svg { width: 18px; height: 18px; filter: drop-shadow(0 0 3px #f2d69066); }
+/* 一级页标题：参考七屏参考板设置主页 — 居中大号衬线 + 字间距拉开的英文小字 */
+.cTitle { margin: 0; display: flex; flex-direction: column; align-items: center; text-align: center; font: 500 max(var(--dot-fs-min, 0px), calc(28px * var(--dot-type-k, 1)))/1.15 var(--dot-font-heading); letter-spacing: .22em; padding-left: .22em; color: #f7e7c2; text-shadow: 0 0 16px #e9c27a59, 0 0 2px #e9c27a80, 0 2px 6px #000e; white-space: nowrap; }
+.cTitle small { display: flex; align-items: center; gap: 9px; margin: 9px 0 0 -.22em; font: 400 max(var(--dot-fs-min, 0px), calc(10.5px * var(--dot-type-k, 1)))/1 var(--dot-font-accent); letter-spacing: .36em; padding-left: .36em; color: #d8bb80; text-shadow: 0 1px 4px #000e; }
+.cTitle small::before, .cTitle small::after { content: ""; width: 22px; height: 1px; background: linear-gradient(90deg, #d9b56a00, #e8c987); }
+.cTitle small::after { background: linear-gradient(90deg, #e8c987, #d9b56a00); }
+/* 二级页标题：‹ + 本组图标 + 分组名 */
+.cHeadGroup { display: flex; align-items: center; gap: 10px; min-width: 0; padding-top: 2px; }
+.cHeadIcon { flex: 0 0 auto; width: 46px; height: 46px; object-fit: contain; pointer-events: none; user-select: none; filter: drop-shadow(0 2px 6px #000b); }
+.cHeadTitle { margin: 0; min-width: 0; display: flex; flex-direction: column; font: 500 max(var(--dot-fs-min, 0px), calc(21px * var(--dot-type-k, 1)))/1.2 var(--dot-font-heading); letter-spacing: .1em; color: #f7e7c2; text-shadow: 0 0 12px #e9c27a4d, 0 2px 6px #000e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cHeadTitle small { margin-top: 4px; font: 400 max(var(--dot-fs-min, 0px), calc(9.5px * var(--dot-type-k, 1)))/1 var(--dot-font-accent); letter-spacing: .28em; color: #cdb07a; overflow: hidden; text-overflow: ellipsis; }
+/* 设置中心里的 ASTRA 入口：底部是背景横幅，入口放在标题栏右侧；点击行为与底角入口完全相同 */
+.overlay[data-center=true] .panel button.spriteKeep { position: relative; inset: auto; justify-self: end; width: 50px; height: 58px; min-width: 0; min-height: 0; margin: 0 2px 0 0; padding: 0; gap: 0; border-radius: 18px; border: 1px solid #dfc28a80; background: radial-gradient(ellipse at top, #bca16d38, #0b1426e0 70%); box-shadow: 0 0 16px #e3b86a40, 0 6px 16px #000a; color: #eccf92; }
+.overlay[data-center=true] .panel button.spriteKeep:hover:not(:disabled) { border-color: #f2d690; background: radial-gradient(ellipse at top, #bca16d4d, #0b1426e0 70%); box-shadow: 0 0 20px #e3b86a59, 0 6px 16px #000a; }
+.overlay[data-center=true] .spriteKeepArt { width: 36px; height: 38px; }
+.overlay[data-center=true] .spriteKeep small { font-size: max(var(--dot-fs-min, 0px), calc(8.5px * var(--dot-type-k, 1))); letter-spacing: .12em; }
+
+/* 一级页：六张分组卡，底座 banner_single_v2（1561×342）等比铺满，宽≈屏宽 84% */
+.cList {
+  position: absolute; z-index: 1; left: 0; right: 0; top: var(--lt); bottom: var(--lb);
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+}
+.overlay[data-center=true] .panel button.cCard {
+  container-type: inline-size; position: relative; flex: 0 0 auto; display: block;
+  width: min(84cqw, 400px, calc((100cqh - var(--lt) - var(--lb) - 30px) / 6 * 4.5643)); aspect-ratio: 1561 / 342; height: auto;
+  min-width: 0; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 9%/40%;
+  background: var(--center-banner) center / 100% 100% no-repeat; box-shadow: none; color: inherit; text-align: left; cursor: pointer;
+  filter: drop-shadow(0 6px 9px #000b) drop-shadow(0 0 1px #000);
+  transition: transform .18s ease, filter .18s ease;
+  animation: cCardIn .42s cubic-bezier(.2,.8,.2,1) both;
+}
+.overlay[data-center=true] .panel button.cCard:hover:not(:disabled) { border: 0; background: var(--center-banner) center / 100% 100% no-repeat; box-shadow: none; filter: drop-shadow(0 6px 9px #000b) drop-shadow(0 0 8px #f0c97a40) brightness(1.06); }
+.overlay[data-center=true] .panel button.cCard:active { transform: scale(.985); filter: drop-shadow(0 4px 6px #000b) brightness(1.1); }
+.overlay[data-center=true] .panel button.cCard:focus-visible { outline: 2px solid #f2d690; outline-offset: 3px; }
+.cCard:nth-child(2) { animation-delay: .04s; } .cCard:nth-child(3) { animation-delay: .08s; } .cCard:nth-child(4) { animation-delay: .12s; } .cCard:nth-child(5) { animation-delay: .16s; } .cCard:nth-child(6) { animation-delay: .2s; }
+@keyframes cCardIn { from { opacity: 0; transform: translateY(10px); } }
+[data-reduced-motion=true] .cCard { animation: none; transition: none; }
+/* 卡内坐标按底座实测：左端金色端饰到 x≈7%，内金边在 x≈3.6%、96.4%；图标中心≈ 13.5%，文字从 24% 起 */
+.cCardIcon { position: absolute; left: 6.6cqw; top: 50%; width: 13.6cqw; height: 13.6cqw; transform: translateY(-50%); object-fit: contain; pointer-events: none; user-select: none; filter: drop-shadow(0 1px 3px #000c); }
+.cCardText { position: absolute; left: 24.2cqw; right: 13cqw; top: 50%; transform: translateY(-52%); display: flex; flex-direction: column; gap: 1.3cqw; min-width: 0; }
+.cCardText b { font-weight: 500; font-size: max(var(--dot-fs-min, 0px), calc(4.85cqw * var(--dot-type-k, 1))); line-height: 1.2; letter-spacing: .06em; color: #f4e5c3; text-shadow: 0 1px 3px #000c, 0 0 10px #e9c27a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cCardText small { font-size: max(var(--dot-fs-min, 0px), calc(3.4cqw * var(--dot-type-k, 1))); line-height: 1.3; letter-spacing: .02em; color: #8e9cb6; text-shadow: 0 1px 2px #000c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cCardChev { position: absolute; right: 6.4cqw; top: 50%; width: 4.6cqw; height: 4.6cqw; transform: translateY(-50%); color: #e8c77f; filter: drop-shadow(0 0 3px #f2d69080); }
+
+/* 二级页：标题栏下沿 → 横幅上方，只有这一段滚动；横幅是背景的一部分，固定不动 */
+.cBody {
+  position: absolute; z-index: 1; left: 0; right: 0; top: var(--hdr); bottom: calc(264 * var(--s));
+  display: flex; flex-direction: column;
+}
+.cScroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  padding: 4px max(16px, 5.6cqw) 26px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 20px), transparent);
+  mask-image: linear-gradient(180deg, transparent 0, #000 12px, #000 calc(100% - 20px), transparent);
+  animation: cPageIn .3s cubic-bezier(.2,.8,.2,1);
+}
+.cScroll::-webkit-scrollbar { display: none; }
+@keyframes cPageIn { from { opacity: 0; transform: translateX(14px); } }
+[data-reduced-motion=true] .cScroll { animation: none; }
+.cSection { margin: 0 0 4px; }
+.cCaption { display: flex; align-items: center; gap: 9px; margin: 12px 4px 8px; font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); font-weight: 500; line-height: 1.2; letter-spacing: .26em; color: #dcb96f; text-shadow: 0 1px 3px #000e; }
+.cCaption::before { content: ""; flex: 0 0 auto; width: 6px; height: 6px; transform: rotate(45deg); background: linear-gradient(135deg, #f8e6ae, #b98c3e); box-shadow: 0 0 6px #f2cd78b3; }
+.cCaption::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, #d9b56a8c, #d9b56a00); }
+/* 玻璃卡：深蓝半透明 + 细金边（代码画）；透明度跟「玻璃浓度」走 */
+.cGlass {
+  position: relative; padding: 2px 14px; border-radius: 16px;
+  background: linear-gradient(180deg, rgb(17 31 58 / calc(var(--dot-glass-opacity, .88) * .8)), rgb(7 14 30 / calc(var(--dot-glass-opacity, .88) * .88)));
+  border: 1px solid #d9b56a7a;
+  box-shadow: inset 0 1px 0 #f6e2a833, inset 0 0 0 3px #08122633, inset 0 0 0 4px #d9b56a17, 0 10px 26px #000a;
+  -webkit-backdrop-filter: blur(8px) saturate(1.1); backdrop-filter: blur(8px) saturate(1.1);
+}
+.cGlass::before { content: ""; position: absolute; left: 16%; right: 16%; top: -1px; height: 1px; background: linear-gradient(90deg, #f6e2a800, #f8e7b4, #f6e2a800); pointer-events: none; }
+.cGlass > * { position: relative; }
+.cGlass > * + *::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, #d9b56a00, #d9b56a52 12%, #d9b56a52 88%, #d9b56a00); pointer-events: none; }
+.cRow { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: 54px; padding: 8px 2px; box-sizing: border-box; }
+.cIcon { display: block; width: 21px; height: 21px; color: #ddb96f; filter: drop-shadow(0 0 3px #f2cd7859); }
+.cLabel { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: max(var(--dot-fs-min, 0px), calc(15px * var(--dot-type-k, 1))); line-height: 1.3; letter-spacing: .02em; color: #f1e7d0; }
+.cLabel small { font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); line-height: 1.45; letter-spacing: 0; color: #8e9cb6; overflow-wrap: anywhere; }
+.cValue { font-size: max(var(--dot-fs-min, 0px), calc(14px * var(--dot-type-k, 1))); color: #f2d690; font-variant-numeric: tabular-nums; letter-spacing: .02em; text-align: right; }
+.cCode { font: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1)))/1.45 var(--dot-font-code); color: #c8d3e6; overflow-wrap: anywhere; }
+.cState { display: inline-flex; align-items: center; gap: 7px; }
+.cState::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #e0806f; box-shadow: 0 0 6px #e0806f; }
+.cState[data-on=true]::before { background: #8fe0a8; box-shadow: 0 0 6px #8fe0a8b3; }
+.cHint { margin: 8px 6px 4px; font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); line-height: 1.65; color: #95a2ba; text-shadow: 0 1px 3px #000e; overflow-wrap: anywhere; }
+.cText { margin: 0; padding: 12px 2px; font-size: max(var(--dot-fs-min, 0px), calc(13px * var(--dot-type-k, 1))); line-height: 1.7; color: #c9cfdc; }
+.cNotice { margin: 6px 0 2px; padding: 10px 12px; border-radius: 12px; border: 1px solid #e3b86a66; background: #2a210fcc; font-size: max(var(--dot-fs-min, 0px), calc(12.5px * var(--dot-type-k, 1))); line-height: 1.6; color: #f1dcab; }
+/* 金色开关（与快捷设置同款） */
+.overlay[data-center=true] .panel button.cSwitch {
+  position: relative; width: 44px; height: 24px; min-width: 0; min-height: 0; margin: 0; padding: 0;
+  border-radius: 999px; background: #080d1eeb; border: 1px solid #d9b56a9e; box-shadow: inset 0 1px 3px #0009; cursor: pointer;
+  transition: background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.overlay[data-center=true] .panel button.cSwitch::after { content: ""; position: absolute; inset: -10px -6px; }
+.overlay[data-center=true] .panel button.cSwitch::before {
+  content: ""; position: absolute; top: 50%; left: 3px; width: 17px; height: 17px; border-radius: 50%;
+  transform: translateY(-50%); background: radial-gradient(circle at 40% 35%, #b9a476, #7b6740); box-shadow: 0 1px 2px #0009;
+  transition: left .22s cubic-bezier(.3,.7,.3,1), background .22s ease;
+}
+.overlay[data-center=true] .panel button.cSwitch[aria-checked=true] { background: linear-gradient(180deg, #f3d891, #c99d4b 70%, #b78a3c); border-color: #f6e2a8; box-shadow: 0 0 8px #f2cd7873, inset 0 1px 1px #ffffff73; }
+.overlay[data-center=true] .panel button.cSwitch[aria-checked=true]::before { left: 22px; background: radial-gradient(circle at 40% 35%, #fffaf0, #efe0be 60%, #cdb88a); box-shadow: 0 1px 3px #4a3410a6; }
+.overlay[data-center=true] .panel button.cSwitch:hover:not(:disabled) { border-color: #f2d690; background: #0c1428eb; box-shadow: inset 0 1px 3px #0009, 0 0 6px #f2cd7840; }
+.overlay[data-center=true] .panel button.cSwitch[aria-checked=true]:hover:not(:disabled) { background: linear-gradient(180deg, #f6dd9a, #cfa352 70%, #bb8e40); box-shadow: 0 0 10px #f2cd7899, inset 0 1px 1px #ffffff73; }
+.overlay[data-center=true] .panel button.cSwitch:focus-visible { outline: 2px solid #f2d690; outline-offset: 3px; }
+.overlay[data-center=true] .panel button:disabled { opacity: .45; cursor: not-allowed; }
+[data-reduced-motion=true] .cSwitch, [data-reduced-motion=true] .cSwitch::before { transition: none; }
+/* 金色滑条：原生 range 保留键盘与读屏，外观全部自绘 */
+.cSlider { grid-template-rows: auto auto; row-gap: 8px; padding: 12px 2px 10px; cursor: pointer; }
+.overlay[data-center=true] .panel input.cRange {
+  grid-column: 2 / 4; -webkit-appearance: none; appearance: none; width: auto; height: 20px; min-height: 0; margin: 0 2px 0 0; padding: 0;
+  border: 0; border-radius: 0; background: transparent; box-shadow: none; outline: none; touch-action: pan-y; cursor: pointer;
+}
+.cRange::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: linear-gradient(90deg, #b88a3c, #f3d891 var(--c-fill), #d9b56a2e var(--c-fill)); box-shadow: inset 0 0 0 1px #d9b56a40; }
+.cRange::-moz-range-track { height: 4px; border-radius: 999px; background: #d9b56a2e; box-shadow: inset 0 0 0 1px #d9b56a40; }
+.cRange::-moz-range-progress { height: 4px; border-radius: 999px; background: linear-gradient(90deg, #b88a3c, #f3d891); }
+.cRange::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; margin-top: -7px; border: 0; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fffaf0, #efe0be 55%, #c9a45e); box-shadow: 0 0 0 2px #d9b56a99, 0 0 10px #f2cd78a6, 0 1px 3px #000a; }
+.cRange::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fffaf0, #efe0be 55%, #c9a45e); box-shadow: 0 0 0 2px #d9b56a99, 0 0 10px #f2cd78a6, 0 1px 3px #000a; }
+.cRange:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px #f6e2a8, 0 0 14px #f2cd78, 0 1px 3px #000a; }
+/* 分段选项（停靠左/右、免打扰时长、分钟） */
+.cSegment { display: inline-flex; gap: 3px; padding: 3px; border-radius: 999px; border: 1px solid #d9b56a85; background: #070d1ee0; box-shadow: inset 0 1px 3px #0009; }
+.cSegment[data-wide=true] { display: flex; }
+.overlay[data-center=true] .panel .cSegment > button {
+  position: relative; flex: 1 1 0; min-width: 46px; height: 34px; min-height: 0; margin: 0; padding: 0 12px;
+  border: 0; border-radius: 999px; background: transparent; box-shadow: none; color: #d6c8a6; font-size: max(var(--dot-fs-min, 0px), calc(13.5px * var(--dot-type-k, 1))); letter-spacing: .04em; white-space: nowrap;
+  transition: background .2s ease, color .2s ease;
+}
+.overlay[data-center=true] .panel .cSegment > button::after { content: ""; position: absolute; inset: -5px 0; }
+.overlay[data-center=true] .panel .cSegment > button:hover:not(:disabled) { border: 0; background: #d9b56a1f; box-shadow: none; color: #f4e5c3; }
+.overlay[data-center=true] .panel .cSegment > button[aria-pressed=true] { background: linear-gradient(180deg, #f3d891, #c99d4b 70%, #b78a3c); color: #1d1607; font-weight: 600; box-shadow: 0 0 8px #f2cd7866, inset 0 1px 1px #ffffff73; }
+.overlay[data-center=true] .panel .cSegment > button:focus-visible { outline: 2px solid #f2d690; outline-offset: 1px; }
+/* 块状行：标签在上、控件在下（免打扰时长、自定义结束） */
+.cBlock { display: flex; flex-direction: column; gap: 10px; padding: 12px 2px; }
+.cBlockLabel { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-left: 34px; font-size: max(var(--dot-fs-min, 0px), calc(13.5px * var(--dot-type-k, 1))); color: #d9cfb8; letter-spacing: .04em; }
+.cBlockLabel b { font-weight: 500; font-size: max(var(--dot-fs-min, 0px), calc(13.5px * var(--dot-type-k, 1))); color: #f2d690; font-variant-numeric: tabular-nums; }
+/* 自定义结束时间：同风格步进器，代替原生日期框 */
+.cPicker { display: flex; flex-direction: column; gap: 10px; }
+.cPickerRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.cStepper { display: inline-flex; align-items: center; justify-content: space-between; gap: 4px; height: 40px; padding: 0 3px; border-radius: 999px; border: 1px solid #d9b56a85; background: #070d1ee0; box-shadow: inset 0 1px 3px #0009; }
+.cStepper[data-wide=true] { display: flex; }
+.cStepper output { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 52px; font-size: max(var(--dot-fs-min, 0px), calc(14.5px * var(--dot-type-k, 1))); color: #f4e5c3; font-variant-numeric: tabular-nums; letter-spacing: .03em; white-space: nowrap; }
+.cStepper output .cIcon { width: 17px; height: 17px; }
+.cStepper output em { font-style: normal; color: #f2d690; }
+.cStepper output small { font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); color: #a9a08a; }
+.overlay[data-center=true] .panel .cStepper > button {
+  position: relative; flex: 0 0 auto; width: 34px; height: 34px; min-width: 0; min-height: 0; margin: 0; padding: 0; display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; box-shadow: none; color: #ecd08e;
+}
+.overlay[data-center=true] .panel .cStepper > button::after { content: ""; position: absolute; inset: -5px -3px; }
+.overlay[data-center=true] .panel .cStepper > button:hover:not(:disabled) { border: 0; background: #d9b56a26; box-shadow: none; }
+.cStepper > button:first-child .cChev { transform: rotate(180deg); }
+.cStepper .cChev { margin: 0; }
+/* 按钮：金边细线胶囊；主按钮金色实心 */
+.cActions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 8px 0 12px; }
+.cActions[data-align=end] { justify-content: flex-end; margin: 0; }
+.overlay[data-center=true] .panel button.cBtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; min-height: 40px; margin: 0; padding: 0 20px; position: relative;
+  border-radius: 999px; border: 1px solid #d9b56a99; background: linear-gradient(180deg, #16243fd9, #0a1428eb); box-shadow: inset 0 1px 0 #f6e2a826, 0 4px 12px #0008;
+  color: #f1dcab; font-size: max(var(--dot-fs-min, 0px), calc(14px * var(--dot-type-k, 1))); letter-spacing: .06em;
+}
+.overlay[data-center=true] .panel button.cBtn::after { content: ""; position: absolute; inset: -3px 0; }
+.overlay[data-center=true] .panel button.cBtn .cIcon { width: 17px; height: 17px; }
+.overlay[data-center=true] .panel button.cBtn:hover:not(:disabled) { border-color: #f2d690; background: linear-gradient(180deg, #1c2c4ad9, #0c182ceb); box-shadow: inset 0 1px 0 #f6e2a833, 0 0 10px #f2cd7833, 0 4px 12px #0008; }
+.overlay[data-center=true] .panel button.cBtn[data-primary=true] { min-width: 96px; border-color: #f6e2a8; background: linear-gradient(180deg, #f3d891, #c99d4b 70%, #b78a3c); color: #1d1607; font-weight: 600; box-shadow: 0 0 10px #f2cd7859, inset 0 1px 1px #ffffff73; }
+.overlay[data-center=true] .panel button.cBtn[data-primary=true]:hover:not(:disabled) { background: linear-gradient(180deg, #f6dd9a, #cfa352 70%, #bb8e40); box-shadow: 0 0 14px #f2cd7880, inset 0 1px 1px #ffffff73; }
+/* 可进入的行（模型/API、插件、重新读取…）：整行是按钮，右侧 › */
+.overlay[data-center=true] .panel button.cNav { width: 100%; min-width: 0; min-height: 54px; margin: 0; padding: 8px 2px; border: 0; border-radius: 0; background: transparent; box-shadow: none; color: inherit; text-align: left; font: inherit; cursor: pointer; }
+.overlay[data-center=true] .panel button.cNav:hover:not(:disabled) { border: 0; background: linear-gradient(90deg, #d9b56a00, #d9b56a14 20%, #d9b56a14 80%, #d9b56a00); box-shadow: none; }
+.overlay[data-center=true] .panel button.cNav:focus-visible { outline: 2px solid #f2d690; outline-offset: -2px; border-radius: 10px; }
+.cChev { width: 16px; height: 16px; margin-right: 2px; color: #e8c77f; filter: drop-shadow(0 0 3px #f2d69066); transition: transform .2s ease; }
+.cChev[data-open=true] { transform: rotate(90deg); }
+.cDetail { padding: 4px 2px 6px 34px; font-size: max(var(--dot-fs-min, 0px), calc(13px * var(--dot-type-k, 1))); line-height: 1.7; color: #c9cfdc; }
+.cDetail p { margin: 6px 0; overflow-wrap: anywhere; }
+.cDetail .cActions { justify-content: flex-start; }
+.cDetail .cHint { margin: 4px 0; }
+/* 保存回执/错误：滚动区下方、横幅上方，占自己的位置，不盖住列表最后一项 */
+.cFoot { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 2px max(16px, 5.6cqw) 6px; }
+.cToast { margin: 0; max-width: 100%; box-sizing: border-box; display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 4px 10px; padding: 7px 14px; border-radius: 14px; border: 1px solid #d9b56a80; background: #0b1226ee; box-shadow: 0 4px 14px #000a; font-size: max(var(--dot-fs-min, 0px), calc(12.5px * var(--dot-type-k, 1))); line-height: 1.5; color: #f1e7d0; text-align: center; }
+.cToast.error { color: #ffb6a6; border-color: #ed9c8d8c; background: #2a1219eb; }
+.overlay[data-center=true] .panel .cToast button { min-height: 30px; min-width: 0; margin: 0; padding: 0 12px; border-radius: 999px; border: 1px solid #d9b56a8c; background: transparent; box-shadow: none; color: #f2d690; font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); }
+@media (prefers-reduced-motion: reduce) { .cCard, .cScroll { animation: none; } }
+.error { color: #ffb6a6; padding: 10px; background: #4a202854; border: 1px solid #ed9c8d5e; border-radius: 10px; overflow-wrap: anywhere; }
+.native { --dsw-alias-bg-base: #0d192b; --dsw-alias-bg-l1: #142338; --dsw-alias-bg-l2: #1d2d43; --dsw-alias-label-primary: #f2e4cd; --dsw-alias-label-secondary: #d2c7b1; --dsw-alias-label-caption: #b6ad9c; --dsw-alias-border-l1: #d9bc8050; color: #f2e4cd; }
+.native > * { max-width: 100%; }
+.native input { color: #f2e4cd; }
+/* 官方设置仍拥有自己的弹层，只给带DOT标题标记的原生配置换表面。 */
+:global([role=dialog]:has([data-dot-native-settings])) { background: linear-gradient(140deg,#18273cf7,#071221fa); color: #f1dfbd; border: 1px solid #d9b87da0; --dsw-alias-bg-base: #0b1728; --dsw-alias-bg-l1: #142438; --dsw-alias-bg-l2: #203249; --dsw-alias-label-primary: #f1dfbd; --dsw-alias-label-secondary: #c9bea8; --dsw-alias-border-l1: #d1b47a55; }
+/* ── 浮层内的精灵入口：设置打开时精灵不消失（底角，跟随停靠侧） ── */
+.spriteKeep { position: absolute; z-index: 3; bottom: max(14px, env(safe-area-inset-bottom)); right: max(12px, env(safe-area-inset-right)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 66px; height: 76px; padding: 0; border-radius: 26px; border: 1px solid #dfc28a88; background: radial-gradient(ellipse at top,#bca16d33,#0b1426e6 70%); box-shadow: 0 0 22px #e3b86a40, 0 8px 22px #000a; color: #eccf92; cursor: pointer; }
+.spriteKeep[data-edge=left] { right: auto; left: max(12px, env(safe-area-inset-left)); }
+.spriteKeepArt { width: 44px; height: 46px; object-fit: contain; pointer-events: none; }
+.spriteKeep small { font: 400 max(var(--dot-fs-min, 0px), calc(10px * var(--dot-type-k, 1)))/1 var(--dot-font-accent); letter-spacing: .14em; color: #eccf92; }
+/* ── 快捷设置面板：高版底座 v2 原画 + 真实控件（单文件验收版 astra_quick_settings.html 的正式接入） ──
+   底座原图 941×1672：金边以内 x≈148–820、y≈368–1556；标题画在原图 y 410–450，标题下横线 y≈481；
+   头发在标题段伸进内侧（x≥795），往下只盖右框外（x≥827）。控件区＝原图 x 150–812、y 498–1540。
+   --u＝面板宽 320 时的设计稿 1px；所有尺寸按它缩放，390 宽屏面板宽≈320px。
+   按钮规则前缀写长是为了压过 dot.module.css 的 .shell button 通用样式（含 :hover/:disabled）。 */
+.overlay[data-quick=true] { display: block; padding: 0; background: #04071229; backdrop-filter: none; }
+.qStage {
+  --w: clamp(296px, 82vw, 340px); --u: calc(var(--w) / 320);
+  position: absolute; width: var(--w); aspect-ratio: 941 / 1672;
+  /* 头发最右端（原图 x≈927）离屏幕右边约 6px */
+  right: calc(6px - var(--w) * .0149);
+  /* 面板底边在原图 y≈1590（＝宽×1.69）；矮屏上移，给底角 ASTRA 入口留位 */
+  top: max(8px, min(130px, 13svh, calc(100svh - 96px - var(--w) * 1.69)));
+  color: #f1e7d0; font-family: var(--dot-font-body);
+  -webkit-font-smoothing: antialiased; user-select: none;
+  animation: qIn .32s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes qIn { from { opacity: 0; transform: translateY(18px) scale(.94); } }
+.shell[data-reduced-motion=true] .qStage { animation: none; }
+/* 金边以内的背景模糊层（约 7px）；底座纯色区约 85% 不透明，花纹越亮越不透明 */
+.qFrost { position: absolute; left: 15.73%; width: 71.41%; top: 22.01%; height: 71.05%; border-radius: calc(var(--u) * 6); -webkit-backdrop-filter: blur(7px) saturate(1.05); backdrop-filter: blur(7px) saturate(1.05); }
+.qArt { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; filter: drop-shadow(0 10px 18px #00000080); }
+/* 标题已画在底座里，真实标题只给读屏 */
+.qTitle { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+.overlay[data-quick=true] .qStage button.qClose {
+  position: absolute; left: calc(77.05% - var(--u) * 15); top: calc(25.9% - var(--u) * 15);
+  width: calc(var(--u) * 30); height: calc(var(--u) * 30); min-width: 0; min-height: 0; padding: 0; margin: 0;
+  display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; box-shadow: none; color: #ecd08e;
+}
+.overlay[data-quick=true] .qStage button.qClose::after { content: ""; position: absolute; inset: calc(var(--u) * -7); }
+.overlay[data-quick=true] .qStage button.qClose:active { background: #d9b56a24; transform: none; }
+.qClose svg { width: calc(var(--u) * 15); height: calc(var(--u) * 15); filter: drop-shadow(0 0 3px #f2d69073); }
+.qContent { position: absolute; left: 15.94%; width: 70.35%; top: 29.78%; height: 62.32%; display: grid; grid-template-rows: 2fr 2fr 2.85fr 2fr 2fr 2.2fr; }
+.qRow { position: relative; display: grid; grid-template-columns: calc(var(--u) * 23) 1fr auto; align-items: center; column-gap: calc(var(--u) * 11); padding: 0 calc(var(--u) * 4) 0 calc(var(--u) * 5); min-height: 0; margin: 0; }
+.qRow:not(:last-child)::after { content: ""; position: absolute; left: calc(var(--u) * 2); right: calc(var(--u) * 2); bottom: 0; height: 1px; background: linear-gradient(90deg,#d9b56a00,#d9b56a6b 14%,#d9b56a6b 86%,#d9b56a00); }
+.qIcon { width: calc(var(--u) * 22); height: calc(var(--u) * 22); display: block; color: #ddb96f; filter: drop-shadow(0 0 3px #f2cd7859); }
+.qLabel { font-size: max(var(--dot-fs-min, 0px), calc(calc(var(--u) * 15) * var(--dot-type-k, 1))); line-height: 1.2; letter-spacing: .02em; white-space: nowrap; color: #f1e7d0; text-shadow: 0 1px 2px #0009; }
+/* 金色开关 */
+.overlay[data-quick=true] .qStage button.qSwitch {
+  position: relative; width: calc(var(--u) * 42); height: calc(var(--u) * 23); min-width: 0; min-height: 0; padding: 0; margin: 0;
+  border-radius: 999px; background: #080d1eeb; border: 1px solid #d9b56a9e; box-shadow: inset 0 1px 3px #0009; opacity: 1;
+  transition: background .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.overlay[data-quick=true] .qStage button.qSwitch::after { content: ""; position: absolute; inset: calc(var(--u) * -10) calc(var(--u) * -6); }
+.overlay[data-quick=true] .qStage button.qSwitch::before {
+  content: ""; position: absolute; top: 50%; left: calc(var(--u) * 3); width: calc(var(--u) * 16); height: calc(var(--u) * 16); border-radius: 50%;
+  transform: translateY(-50%); background: radial-gradient(circle at 40% 35%,#b9a476,#7b6740); box-shadow: 0 1px 2px #0000008c;
+  transition: left .22s cubic-bezier(.3,.7,.3,1), background .22s ease;
+}
+.overlay[data-quick=true] .qStage button.qSwitch[aria-checked=true] { background: linear-gradient(180deg,#f3d891,#c99d4b 70%,#b78a3c); border-color: #f6e2a8; box-shadow: 0 0 8px #f2cd7873, inset 0 1px 1px #ffffff73; }
+.overlay[data-quick=true] .qStage button.qSwitch[aria-checked=true]::before { left: calc(100% - var(--u) * 19); background: radial-gradient(circle at 40% 35%,#fffdf4,#f1e2bd); }
+.overlay[data-quick=true] .qStage button.qSwitch:hover:not(:disabled) { border-color: #f2d690; }
+.overlay[data-quick=true] .qStage button.qSwitch:active:not(:disabled) { transform: none; }
+.overlay[data-quick=true] .qStage button.qSwitch:disabled { cursor: not-allowed; opacity: .55; }
+.overlay[data-quick=true] .qStage button.qSwitch:focus-visible, .overlay[data-quick=true] .qStage button.qClose:focus-visible, .overlay[data-quick=true] .qStage button.qGo:focus-visible, .overlay[data-quick=true] .qStage input.qRange:focus-visible { outline: 1.5px solid #f2d690; outline-offset: 2px; }
+/* 留位行（显示 ASTRA / 自动贴边，功能待定）：样子照原版，开关不可点 */
+.qRow[data-pending=true] .qLabel, .qRow[data-pending=true] .qIcon { opacity: .78; }
+/* 精灵大小：原生 range，读屏与键盘照旧 */
+.qSize { grid-template-rows: auto auto; align-content: center; row-gap: calc(var(--u) * 9); cursor: pointer; }
+.qValue { font-size: max(var(--dot-fs-min, 0px), calc(calc(var(--u) * 14) * var(--dot-type-k, 1))); color: #f2d690; font-variant-numeric: tabular-nums; letter-spacing: .02em; min-width: calc(var(--u) * 38); text-align: right; }
+.overlay[data-quick=true] .qStage input.qRange {
+  grid-column: 2 / 4; -webkit-appearance: none; appearance: none; width: auto; height: calc(var(--u) * 18); min-width: 0; min-height: 0;
+  margin: 0 calc(var(--u) * 2) 0 0; padding: 0; border: 0; border-radius: 0; background: transparent; touch-action: none; cursor: pointer;
+}
+.qRange::-webkit-slider-runnable-track { height: calc(var(--u) * 4); border-radius: 999px; background: linear-gradient(90deg,#a9803c,#f2d690) 0 0 / var(--q-fill, 50%) 100% no-repeat, #d9b56a2e; box-shadow: inset 0 0 0 1px #d9b56a59, 0 0 6px #f2cd7840; }
+.qRange::-moz-range-track { height: calc(var(--u) * 4); border-radius: 999px; background: #d9b56a2e; box-shadow: inset 0 0 0 1px #d9b56a59; }
+.qRange::-moz-range-progress { height: calc(var(--u) * 4); border-radius: 999px; background: linear-gradient(90deg,#a9803c,#f2d690); }
+.qRange::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: calc(var(--u) * 17); height: calc(var(--u) * 17); margin-top: calc(var(--u) * -6.5); border: 0; border-radius: 50%; background: radial-gradient(circle at 40% 35%,#fffaf0,#f0d48c 55%,#b98c3e); box-shadow: 0 0 0 2px #0d1630e6, 0 0 0 3px #f2d690cc, 0 0 10px #f2cd788c; }
+.qRange::-moz-range-thumb { width: calc(var(--u) * 17); height: calc(var(--u) * 17); border: 0; border-radius: 50%; background: radial-gradient(circle at 40% 35%,#fffaf0,#f0d48c 55%,#b98c3e); box-shadow: 0 0 0 2px #0d1630e6, 0 0 0 3px #f2d690cc, 0 0 10px #f2cd788c; }
+/* 打开设置中心 */
+.overlay[data-quick=true] .qStage button.qGo { width: 100%; min-width: 0; min-height: 0; margin: 0; padding: 0 calc(var(--u) * 4) 0 calc(var(--u) * 5); border: 0; border-radius: calc(var(--u) * 8); background: transparent; box-shadow: none; text-align: left; color: inherit; font: inherit; cursor: pointer; transition: background .15s ease; }
+.overlay[data-quick=true] .qStage button.qGo:hover:not(:disabled) { background: #d9b56a14; border: 0; box-shadow: none; }
+.overlay[data-quick=true] .qStage button.qGo:active:not(:disabled) { background: #d9b56a1f; transform: none; }
+.qChev { width: calc(var(--u) * 16); height: calc(var(--u) * 16); margin-right: calc(var(--u) * 4); color: #ecd08e; filter: drop-shadow(0 0 3px #f2cd7866); }
+/* 保存回执/错误：面板下方一行，不压控件，也让开底角的 ASTRA 入口 */
+.qFooter { position: absolute; left: 12px; right: 90px; top: calc(max(8px, min(130px, 13svh, 100svh - 96px - clamp(296px, 82vw, 340px) * 1.69)) + clamp(296px, 82vw, 340px) * 1.70); display: flex; flex-direction: column; align-items: flex-end; gap: 6px; pointer-events: none; }
+.overlay[data-edge=left] .qFooter { left: 90px; right: 12px; }
+.qReceipt, .qError { pointer-events: auto; margin: 0; max-width: min(360px, 100%); padding: 7px 12px; border-radius: 14px; font-size: max(var(--dot-fs-min, 0px), calc(12.5px * var(--dot-type-k, 1))); line-height: 1.5; color: #f1e7d0; background: #0c1226eb; border: 1px solid #d9b56a80; overflow-wrap: anywhere; }
+.qError { color: #ffb6a6; border-color: #ed9c8d8c; background: #2a1219eb; }
+.overlay[data-quick=true] .qReceipt button { min-width: 0; min-height: 30px; margin: 0 0 0 8px; padding: 2px 10px; font-size: max(var(--dot-fs-min, 0px), calc(12px * var(--dot-type-k, 1))); border-radius: 10px; border: 1px solid #d9b56a99; background: #111e31d9; color: #efdbb0; }
+
+/* ==== 全局字号（docs/全局字号-改动说明-20261024.md） ====
+   正文统一成 400 宽下星邮匣分类栏四个字刚好一行放下的大小；--dot-type-k 是这一块的整体倍率（让这块的正文落到全局正文），
+   --dot-fs-min 是全局小字下限（计数、时间这一档），比它小的字抬到它。变换缩放的画布按缩放比换算回画布像素。 */
+.overlay { --dot-type-k: .633; --dot-fs-min: 8.75px; }
+
+
+/* 设置中心的大标题画在新背景图里：代码画的「设置中心」保留原位置和大小（不挪布局），只是看不见，读屏照样读到 h1。 */
+.panel[data-view=home] .cTitle, .panel[data-view=home] .cTitle small { color: transparent; text-shadow: none; }
+.panel[data-view=home] .cTitle small::before, .panel[data-view=home] .cTitle small::after { background: none; }
+
+/* 设置长说明按阅读字号而非原画装饰倍率排版；原有滚动区接住换行，不改面板外框。 */
+.panel[data-view=group] .cLabel,
+.panel[data-view=group] .cText,
+.panel[data-view=group] .cDetail,
+.panel[data-view=group] .cHint,
+.panel[data-view=group] .cNotice {
+  font-family: var(--dot-font-body); font-weight: 400;
+  font-size: calc(var(--dot-size-body, 16px) * var(--dot-font-scale, 1));
+  line-height: var(--dot-line-body, 1.6); overflow-wrap: anywhere;
+}
+.panel[data-view=group] .cLabel small {
+  font-size: calc(var(--dot-size-caption, 14px) * var(--dot-font-scale, 1));
+  line-height: var(--dot-line-body, 1.6);
+}

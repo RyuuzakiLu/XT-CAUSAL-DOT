@@ -1,0 +1,140 @@
+/* 「能力配置」：DSH 宿主原生设置面板的插件层覆盖。
+   面板是宿主 @deepseek-ai/dsh-client-ui-settings-general 的 SettingsPanel，用 createPortal 挂在 body 下，
+   不在这份源码里；各行（权限/语言/外观/模型…）也各自在宿主包里。这里只做两件事：
+   1. 把面板和它弹出的菜单换成 ASTRA 深色金色令牌（宿主浅色主题下控件是白底，配上金字看不清）；
+   2. 窄屏重排：左栏变顶部横向分段控件，内容占满宽度，行内标题与控件放不下就换行，不再竖排。
+   作用域：只匹配带 ASTRA 品牌头（[data-dot-native-settings]）的那个对话框，以及它打开期间弹出的菜单。
+   宿主类名带哈希前缀（如 VOzbGW_navCell），这里只认后半截和结构，宿主升级换前缀也能对上。
+   样式由 NativeSettingsChrome 随面板一起渲染，面板关闭就移除。 */
+
+/* DOT只从明确的plugins入口打开这层；隐藏其他原生设置导航，不移除插件配置本身。 */
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_navList"]) { display: none !important; }
+
+/* —— 1. 配色令牌 —— */
+:global(:is([role=dialog]:has([data-dot-native-settings]), body:has([data-dot-native-settings]) [role=menu])) {
+  color-scheme: dark;
+  --dsw-alias-bg-base: #0a1526;
+  --dsw-alias-bg-layer-1: #0e1b2f;
+  --dsw-alias-bg-layer-2: #122139;
+  --dsw-alias-bg-module-platform: #182b45;
+  --dsw-alias-settings-card-fill: #12223a;
+  --dsw-alias-settings-card-stroke: rgba(229, 194, 126, .26);
+  --dsw-alias-interactive-bg-hover: rgba(229, 194, 126, .12);
+  --dsw-alias-interactive-bg-hover-solid: #1f3453;
+  --dsw-alias-interactive-bg-hover-danger: rgba(255, 157, 146, .16);
+  --dsw-specific-sidebar-nav-item-hover: rgba(229, 194, 126, .1);
+  --dsw-specific-sidebar-nav-item-active: #e5c27e;
+  --dsw-alias-label-primary: #f4e8cf;
+  --dsw-alias-label-secondary: #d9ccb1;
+  --dsw-alias-label-tertiary: #bfb196;
+  --dsw-alias-label-caption: #ada189;
+  --dsw-alias-label-dimmed: #a0957f;
+  --dsw-alias-label-primary-foreground: #1b1407;
+  --dsw-alias-border-l1: rgba(229, 194, 126, .24);
+  --dsw-alias-border-l2: rgba(229, 194, 126, .22);
+  --dsw-alias-border-l3: rgba(229, 194, 126, .34);
+  --dsw-alias-border-l4: rgba(229, 194, 126, .32);
+  --dsw-alias-state-business-primary: #e5c27e;
+  --dsw-alias-state-business-tertiary: rgba(229, 194, 126, .16);
+  --dsw-alias-state-error-primary: #ffa397;
+  --dsw-alias-state-error-tertiary: rgba(255, 163, 151, .14);
+  --dsw-alias-state-success-primary: #86d9a8;
+  --dsw-alias-state-warn-primary: #f2c46b;
+  --dsw-alias-state-warn-label: #f2c46b;
+  --dsw-alias-state-warn-tertiary: rgba(242, 196, 107, .14);
+  --dsw-alias-button-primary-fill: #e5c27e;
+  --dsw-alias-button-primary-hover: #f0d39a;
+  --dsw-alias-button-primary-disabled: #5c5340;
+  --dsw-alias-menu-icon: #d9ccb1;
+  --dsw-menu-surface-fill: #12223a;
+  --dsw-alias-scrollbar-bg-l2: rgba(229, 194, 126, .28);
+  --dsw-static-neutral-bluish-400: #e5c27e;
+  color: var(--dsw-alias-label-primary);
+}
+:global(body:has([data-dot-native-settings]) [role=menu]) { background: #12223a; border: 1px solid rgba(229, 194, 126, .3); }
+
+/* 左栏选中：金底深字，一眼看得出当前在哪一页。 */
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_navCell"]) { color: var(--dsw-alias-label-secondary); }
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_navCell"][class*="_active"]) { background: linear-gradient(180deg, #f0d49b, #d9b46f); color: #1b1407; font-weight: 600; box-shadow: 0 0 0 1px rgba(255, 233, 186, .5) inset, 0 4px 14px rgba(217, 180, 111, .22); }
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_navCell"][class*="_active"] *) { color: inherit; }
+
+/* 下拉框：深底、暖白字、金边；不可用时虹线边、文字仍看得清。 */
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_selector"]) { background: #182b45; color: #f4e8cf; border: 1px solid rgba(229, 194, 126, .4); }
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_selector"]:is(:disabled, [aria-disabled=true])) { background: #101e32; color: #c2b59a; border-style: dashed; opacity: 1; }
+:global([role=dialog]:has([data-dot-native-settings]) [role=alert]) { color: #ffb2a6; }
+
+/* 外观三选一：选中的金边加浅金底，其余深底。 */
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_themeCube"]) { background: #142640; color: #d9ccb1; border: 1px solid rgba(229, 194, 126, .22); }
+:global([role=dialog]:has([data-dot-native-settings]) [class*="_themeCube"]:is([class*="_selected"], [aria-checked=true])) { background: rgba(229, 194, 126, .18); color: #ffe9bd; border-color: #e5c27e; box-shadow: 0 0 0 1px #e5c27e inset; }
+
+:global([role=dialog]:has([data-dot-native-settings]) :focus-visible) { outline: 2px solid #e5c27e; outline-offset: 2px; }
+
+/* —— 2. 窄屏重排（手机）；宽屏仍是宿主原来的双栏 —— */
+@media (max-width: 640px) {
+  :global([role=dialog]:has([data-dot-native-settings])) { flex-direction: column; width: calc(100vw - 16px); max-width: calc(100vw - 16px); }
+  :global([role=dialog]:has([data-dot-native-settings]) > nav) { width: auto; flex: none; gap: 10px; padding: 14px 12px 12px; border-bottom: 1px solid rgba(229, 194, 126, .2); }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navTitle"]) { min-height: 32px; padding: 0 48px 0 4px; display: flex; align-items: center; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navList"]) { flex: none; flex-direction: row; gap: 4px; padding: 3px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border-radius: 12px; background: rgba(3, 9, 19, .6); border: 1px solid rgba(229, 194, 126, .22); }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navList"]::-webkit-scrollbar) { display: none; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navCell"]) { flex: 1 0 auto; width: auto; height: 38px; padding: 0 10px; gap: 6px; justify-content: center; border-radius: 9px; font-size: max(var(--dot-fs-min, 0px), calc(13px * var(--dot-type-k, 1))); white-space: nowrap; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navLabel"]) { flex: none; overflow: visible; text-overflow: clip; }
+  :global([role=dialog]:has([data-dot-native-settings]) > nav + div) { flex: 1 1 auto; min-height: 0; width: 100%; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_header"]:has(> [class*="_close"])) { position: absolute; top: 12px; right: 10px; height: auto; padding: 0; z-index: 2; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_close"]) { width: 36px; height: 36px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_options"]) { padding: 14px 16px 24px; }
+
+  /* 行：标题文字至少留 150px，和控件并排放不下时控件换到下一行。 */
+  :global([role=dialog]:has([data-dot-native-settings]) :is([class$="_row"], [class*="_row "])) { flex-wrap: wrap; column-gap: 12px; row-gap: 8px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_rowText"]) { flex: 1 1 150px; min-width: 0; padding-right: 0; }
+  :global([role=dialog]:has([data-dot-native-settings]) :is([class*="_rowText"], [class*="_desc"], [class*="_intro"], [class*="_notice"], [class*="_error"], [role=alert])) { overflow-wrap: anywhere; word-break: normal; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_selector"]) { flex: 0 1 auto; max-width: 100%; min-height: 36px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_selector"] > span:first-child) { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  :global([role=dialog]:has([data-dot-native-settings]) :is([class$="_control"], [class*="_control "], [class$="_field"], [class*="_field "])) { flex: 0 1 auto; max-width: 100%; }
+
+  /* 外观三个选项横排均分。 */
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_cubeRow"]) { flex-wrap: nowrap; gap: 8px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_themeCube"]) { flex: 1 1 0; min-width: 0; padding: 12px 4px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_themeCube"] span) { white-space: nowrap; }
+
+  /* 模型页：行头放不下就换行，操作按钮靠右。 */
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_rowHead"]) { flex-wrap: wrap; row-gap: 8px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_rowIdentity"]) { min-width: 0; flex: 1 1 150px; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_rowActions"]) { margin-left: auto; }
+}
+
+/* 更窄（小于 440px）：分段控件隐去图标，四个分区一行放得下；分区更多时可横向滑动。 */
+@media (max-width: 440px) {
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navIcon"]) { display: none; }
+  :global([role=dialog]:has([data-dot-native-settings]) [class*="_navCell"]) { padding: 0 8px; }
+}
+
+/* 简洁版原生设置是 body 下的 portal，需要显式覆盖它自身的旧金色令牌。 */
+:global(html[data-lite-theme] :is([role=dialog]:has([data-dot-native-settings]), body:has([data-dot-native-settings]) [role=menu])) {
+  color-scheme: inherit;
+  --dsw-alias-bg-base: var(--bg); --dsw-alias-bg-layer-1: var(--bg); --dsw-alias-bg-layer-2: var(--subtle);
+  --dsw-alias-bg-module-platform: var(--card); --dsw-alias-settings-card-fill: var(--card); --dsw-alias-settings-card-stroke: var(--rule);
+  --dsw-alias-interactive-bg-hover: var(--subtle); --dsw-alias-interactive-bg-hover-solid: var(--subtle); --dsw-alias-interactive-bg-hover-danger: var(--red-soft);
+  --dsw-specific-sidebar-nav-item-hover: var(--subtle); --dsw-specific-sidebar-nav-item-active: var(--blue);
+  --dsw-alias-label-primary: var(--fg); --dsw-alias-label-secondary: var(--muted); --dsw-alias-label-tertiary: var(--muted);
+  --dsw-alias-label-caption: var(--faint); --dsw-alias-label-dimmed: var(--faint); --dsw-alias-label-primary-foreground: var(--on-blue);
+  --dsw-alias-border-l1: var(--rule); --dsw-alias-border-l2: var(--rule); --dsw-alias-border-l3: var(--stroke); --dsw-alias-border-l4: var(--stroke);
+  --dsw-alias-state-business-primary: var(--blue); --dsw-alias-state-business-tertiary: var(--blue-soft);
+  --dsw-alias-state-error-primary: var(--danger); --dsw-alias-state-error-tertiary: var(--red-soft);
+  --dsw-alias-state-success-primary: var(--blue); --dsw-alias-state-warn-primary: var(--orange); --dsw-alias-state-warn-label: var(--orange-text); --dsw-alias-state-warn-tertiary: var(--orange-soft);
+  --dsw-alias-button-primary-fill: var(--blue-btn); --dsw-alias-button-primary-hover: var(--blue-btn); --dsw-alias-button-primary-disabled: var(--stroke);
+  --dsw-alias-menu-icon: var(--muted); --dsw-menu-surface-fill: var(--card); --dsw-alias-scrollbar-bg-l2: var(--stroke); --dsw-static-neutral-bluish-400: var(--blue);
+  color: var(--fg);
+}
+:global(html[data-lite-theme] body:has([data-dot-native-settings]) [role=menu]) { background: var(--card); border-color: var(--rule); }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [class*="_navCell"][class*="_active"]) { background: var(--blue-soft); color: var(--blue); box-shadow: none; }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [class*="_selector"]) { background: var(--card); color: var(--fg); border-color: var(--stroke); }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [class*="_selector"]:is(:disabled,[aria-disabled=true])) { background: var(--subtle); color: var(--muted); }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [role=alert]) { color: var(--danger); }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [class*="_themeCube"]) { background: var(--card); color: var(--muted); border-color: var(--rule); }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [class*="_themeCube"]:is([class*="_selected"],[aria-checked=true])) { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue) inset; }
+:global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) :focus-visible) { outline-color: var(--blue); }
+
+@media (max-width: 640px) {
+  :global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) > nav) { border-color: var(--rule); }
+  :global(html[data-lite-theme] [role=dialog]:has([data-dot-native-settings]) [class*="_navList"]) { background: var(--subtle); border-color: var(--rule); }
+}

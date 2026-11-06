@@ -1,0 +1,30 @@
+.menu {
+  position: absolute; bottom: calc(100% + 10px); left: 0; z-index: 30;
+  width: 176px; max-width: calc(100vw - 32px); padding: 6px;
+  border: 1px solid var(--cmp-line); border-radius: 16px;
+  background: var(--cmp-bg); color: var(--fg); box-shadow: var(--cmp-shadow);
+}
+/* 从加号上方展开；关闭时保留面板，直到退出过渡结束。 */
+.menu {
+  transform-origin: 18px bottom;
+  opacity: 0; transform: translateY(10px) scale(.88); visibility: hidden; pointer-events: none;
+  transition: opacity 220ms ease-in, transform 220ms cubic-bezier(.4, 0, .7, 1), visibility 0s 220ms;
+}
+.menu[aria-hidden="false"] {
+  opacity: 1; transform: translateY(0) scale(1); visibility: visible; pointer-events: auto;
+  transition: opacity 300ms ease-out, transform 300ms cubic-bezier(.2, .8, .2, 1);
+}
+.plusIcon { transition: transform 240ms cubic-bezier(.2, .8, .2, 1); }
+[aria-expanded="true"] > .plusIcon { transform: rotate(45deg); }
+:global([data-reduced-motion="true"]) .menu, :global([data-reduced-motion="true"]) .plusIcon { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .menu, .menu[aria-hidden="false"], .plusIcon { transition: none; }
+}
+.menu > button {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px;
+  padding: 10px 12px; border: 0; border-radius: 10px; background: transparent;
+  color: inherit; font: inherit; font-size: 14px; text-align: left; white-space: nowrap; cursor: pointer;
+}
+.menu > button:hover, .menu > button:focus-visible { background: var(--cmp-off); }
+.menu > button:focus-visible { outline: 2px solid var(--cmp-blue); outline-offset: -2px; }
+.menu > button > svg { flex: none; width: 20px; height: 20px; color: var(--cmp-icon); }

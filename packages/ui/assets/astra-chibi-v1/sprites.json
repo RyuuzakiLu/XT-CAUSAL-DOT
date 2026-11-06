@@ -1,0 +1,244 @@
+{
+  "name": "XTCAUSAL DOT ASTRA Chibi",
+  "version": "1.0",
+  "states": {
+    "idle": {
+      "file": "astra_chibi_idle.png",
+      "source_file": "星月华饰银发少女 (1).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        255
+      ],
+      "alpha_bbox_threshold20": [
+        115,
+        23,
+        1135,
+        1225
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        0,
+        0,
+        1536,
+        1536
+      ]
+    },
+    "typing": {
+      "file": "astra_chibi_typing.png",
+      "source_file": "星辉少女静候输入(1).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        254
+      ],
+      "alpha_bbox_threshold20": [
+        110,
+        19,
+        1143,
+        1226
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        1536,
+        0,
+        1536,
+        1536
+      ]
+    },
+    "thinking": {
+      "file": "astra_chibi_thinking.png",
+      "source_file": "银发星辉眼镜少女(1).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        254
+      ],
+      "alpha_bbox_threshold20": [
+        111,
+        28,
+        1144,
+        1226
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        3072,
+        0,
+        1536,
+        1536
+      ]
+    },
+    "responding": {
+      "file": "astra_chibi_responding.png",
+      "source_file": "星辉哥特萝莉 chibi少女(1).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        250
+      ],
+      "alpha_bbox_threshold20": [
+        112,
+        22,
+        1146,
+        1230
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        4608,
+        0,
+        1536,
+        1536
+      ]
+    },
+    "working": {
+      "file": "astra_chibi_working.png",
+      "source_file": "星辉书卷少女(1).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        262
+      ],
+      "alpha_bbox_threshold20": [
+        101,
+        13,
+        1155,
+        1218
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        0,
+        1536,
+        1536,
+        1536
+      ]
+    },
+    "reminder": {
+      "file": "astra_chibi_reminder.png",
+      "source_file": "星辰冠饰的银发少女献信(2).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        250
+      ],
+      "alpha_bbox_threshold20": [
+        109,
+        14,
+        1149,
+        1230
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        1536,
+        1536,
+        1536,
+        1536
+      ]
+    },
+    "done": {
+      "file": "astra_chibi_done.png",
+      "source_file": "星辉黑金礼服Q版少女(1).png",
+      "canvas": [
+        1536,
+        1536
+      ],
+      "original_size": [
+        1254,
+        1254
+      ],
+      "offset": [
+        141,
+        249
+      ],
+      "alpha_bbox_threshold20": [
+        95,
+        12,
+        1166,
+        1231
+      ],
+      "baseline_y": 1480,
+      "anchor_normalized": [
+        0.5,
+        0.9635416666666666
+      ],
+      "atlas_rect": [
+        3072,
+        1536,
+        1536,
+        1536
+      ]
+    }
+  },
+  "notes": [
+    "7 static state sprites, not sequential animation frames",
+    "All sprites are 1536x1536 with feet aligned to baseline y=1480",
+    "Original art pixels preserved; no generative edits or edge cleanup",
+    "Atlas order: idle, typing, thinking, responding / working, reminder, done, empty",
+    "For smooth animation, add subtle CSS transforms and fades."
+  ]
+}
